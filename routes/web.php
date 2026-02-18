@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ScooterController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\StorageController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminScooterController;
 use App\Http\Controllers\Admin\AdminReservationController;
@@ -22,6 +23,14 @@ use App\Http\Controllers\Admin\AdminReservationController;
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
+
+// Storage Routes (serve images and logos without symlink requirement)
+Route::get('/storage/{path}', [StorageController::class, 'getImage'])
+    ->where('path', '.*')
+    ->name('storage.image');
+
+Route::get('/logo/{filename}', [StorageController::class, 'getLogo'])
+    ->name('storage.logo');
 
 // Public Scooter Routes
 Route::get('/scooters', [ScooterController::class, 'index'])->name('scooters.index');

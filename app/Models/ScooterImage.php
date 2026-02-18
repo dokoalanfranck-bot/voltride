@@ -24,15 +24,7 @@ class ScooterImage extends Model
 
     public function getUrl(): string
     {
-        // Try to use the stored image path first
-        $path = storage_path('app/public/' . $this->image_path);
-        
-        // If file exists, return asset URL
-        if (file_exists($path)) {
-            return asset('storage/' . $this->image_path);
-        }
-        
-        // Otherwise, return a dynamic placeholder
-        return 'https://via.placeholder.com/400x250?text=' . urlencode($this->alt_text ?? 'Scooter Image');
+        // Use route-based image serving (works in production without symlink)
+        return route('storage.image', ['path' => $this->image_path]);
     }
 }

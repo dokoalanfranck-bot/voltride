@@ -90,7 +90,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center gap-2">
-                    <img src="{{ asset('storage/logos/logo.jpeg') }}" alt="VoltRide Logo" style="width: 60px; height: 60px; object-fit: contain; display: flex; align-items: center;">
+                    <img src="{{ route('storage.logo', ['filename' => 'logo.jpeg']) }}" alt="VoltRide Logo" style="width: 60px; height: 60px; object-fit: contain; display: flex; align-items: center;">
                     <a href="/" class="text-xl font-bold text-white">VoltRide</a>
                 </div>
                 <div class="flex space-x-4">
