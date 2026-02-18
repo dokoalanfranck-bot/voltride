@@ -95,7 +95,7 @@
             position: sticky;
             top: 0;
             z-index: 50;
-            background: linear-gradient(135deg, #1f7550 0%, #155d3b 100%);
+            background: linear-gradient(135deg, #09B826 0%, #0a4874 100%);
             color: white;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }

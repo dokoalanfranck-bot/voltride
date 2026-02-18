@@ -14,7 +14,7 @@
         }
 
         nav {
-            background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-dark) 100%);
+            background: linear-gradient(135deg, #09B826 0%, #04243a 100%);
             box-shadow: 0 2px 12px rgba(31, 117, 80, 0.15);
         }
 
@@ -28,7 +28,7 @@
         }
 
         .hero {
-            background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-light) 100%);
+            background: linear-gradient(135deg, #045111 0%, #09B826 100%);
             padding: 100px 20px;
             color: white;
             text-align: center;
@@ -78,7 +78,7 @@
         }
 
         .footer {
-            background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-dark) 100%);
+            background: linear-gradient(135deg, #09B826 0%, #045111 100%);
             color: white;
             padding: 40px 20px;
         }
