@@ -1,61 +1,11 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Détails de la Réservation - Admin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        :root {
-            --green-primary: #1f7550;
-            --green-light: #2d9b6f;
-            --green-dark: #155d3b;
-        }
-        body {
-            background-color: #f5f5f5;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .bg-white {
-            animation: slideIn 0.6s ease-out;
-        }
-    </style>
-</head>
-<body class="bg-gray-50">
-    <div class="min-h-screen">
-        <!-- Navigation -->
-        <nav style="background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-dark) 100%); box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-                <div style="color: white; font-size: 1.5rem; font-weight: 800;">
-                    🛴 ScooterRent
-                </div>
-                <div style="display: flex; gap: 20px;">
-                    <a href="{{ route('admin.dashboard') }}" style="color: white; text-decoration: none; font-weight: 600;">Tableau de bord</a>
-                    <a href="{{ route('admin.scooters.index') }}" style="color: white; text-decoration: none; font-weight: 600;">Trottinettes</a>
-                    <a href="{{ route('admin.reservations.index') }}" style="color: white; text-decoration: none; font-weight: 600;">Réservations</a>
-                    <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                        @csrf
-                        <button type="submit" style="color: white; background: none; border: none; cursor: pointer; font-weight: 600;">Déconnexion</button>
-                    </form>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Main Content -->
-        <div class="max-w-4xl mx-auto px-4 py-8">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
-                <h1 style="font-size: 2rem; font-weight: 800; color: var(--green-primary);">Réservation #{{ $reservation->id }}</h1>
-                <a href="{{ route('admin.reservations.index') }}" style="
-                    background: var(--green-primary);
-                    color: white;
-                    padding: 10px 20px;
-                    border-radius: 6px;
-                    text-decoration: none;
-                    font-weight: 600;
-                ">← Retour</a>
-            </div>
+@extends('layouts.app')
+@section('title', 'Détails de la Réservation - Admin')
+@section('content')
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+        <h1 style="font-size: 2rem; font-weight: 800; color: var(--green-primary);">Réservation #{{ $reservation->id }}</h1>
+        <a href="{{ route('admin.reservations.index') }}" style="background: var(--green-primary); color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600;">← Retour</a>
+    </div>
 
             <!-- Success/Error Messages -->
             @if (session('success'))
@@ -83,14 +33,16 @@
 
                     <div>
                         <p style="font-size: 0.85rem; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Trottinette</p>
-                        <p style="font-size: 1.1rem; font-weight: 600; color: #333;">{{ $reservation->scooter?->brand ?? 'N/A' }} {{ $reservation->scooter?->model ?? '' }}</p>
-                        <p style="font-size: 0.9rem; color: #666;">No. {{ $reservation->scooter?->id ?? 'N/A' }}</p>
+                            <p style="font-size: 1.1rem; font-weight: 600; color: #333;">Nom: {{ $reservation->guest_name ?? $reservation->user?->name ?? 'N/A' }}</p>
+                            <p style="font-size: 0.9rem; color: #666;">Email: {{ $reservation->guest_email ?? $reservation->user?->email ?? 'N/A' }}</p>
+                            <p style="font-size: 0.9rem; color: #666;">Téléphone: {{ $reservation->guest_phone ?? $reservation->user?->phone ?? 'N/A' }}</p>
                     </div>
 
                     <div>
                         <p style="font-size: 0.85rem; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Début de réservation</p>
-                        <p style="font-size: 1.1rem; font-weight: 600; color: #333;">{{ $reservation->start_time->format('d/m/Y') }}</p>
-                        <p style="font-size: 0.9rem; color: #666;">{{ $reservation->start_time->format('H:i') }}</p>
+                            <p style="font-size: 1.1rem; font-weight: 600; color: #333;">Nom: {{ $reservation->scooter?->name ?? 'N/A' }}</p>
+                            <p style="font-size: 0.9rem; color: #666;">Marque: {{ $reservation->scooter?->brand ?? 'N/A' }}</p>
+                            <p style="font-size: 0.9rem; color: #666;">Modèle: {{ $reservation->scooter?->model ?? 'N/A' }}</p>
                     </div>
 
                     <div>
@@ -126,8 +78,7 @@
 
                     <div>
                         <p style="font-size: 0.85rem; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Prix total</p>
-                        <p style="font-size: 1.5rem; font-weight: 800; color: var(--green-primary);">{{ $reservation->total_price ? number_format($reservation->total_price, 2) . ' €' : 'N/A' }}</p>
-                            <p style="font-size: 1.5rem; font-weight: 800; color: var(--green-primary);">{{ $reservation->total_price ? number_format($reservation->total_price, 2) . ' $' : 'N/A' }}</p>
+                        <p style="font-size: 1.5rem; font-weight: 800; color: var(--green-primary);">{{ $reservation->total_price ? number_format($reservation->total_price, 2) . ' $' : 'N/A' }}</p>
                     </div>
                 </div>
             </div>
@@ -138,6 +89,7 @@
                     <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--green-primary); margin-bottom: 20px;">Détails du Paiement</h2>
 
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
+    @endsection
                         <div>
                             <p style="font-size: 0.85rem; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Statut du paiement</p>
                             <span style="
@@ -165,7 +117,7 @@
 
                         <div>
                             <p style="font-size: 0.85rem; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Montant payé</p>
-                            <p style="font-size: 1.5rem; font-weight: 800; color: var(--green-primary);">{{ number_format($payment->amount, 2) }} €</p>
+                            <p style="font-size: 1.5rem; font-weight: 800; color: var(--green-primary);">{{ number_format($payment->amount, 2) }} $</p>
                         </div>
 
                         <div>
@@ -238,6 +190,4 @@
                 </a>
             </div>
         </div>
-    </div>
-</body>
-</html>
+@endsection
