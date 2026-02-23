@@ -116,7 +116,7 @@
                     @forelse ($reservations as $reservation)
                         <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s;">
                             <td style="padding: 16px; font-weight: 600; color: #1f7550;">{{ $reservation->id }}</td>
-                            <td style="padding: 16px;">{{ $reservation->user?->name ?? 'N/A' }}<br><span style="color: #666; font-size: 0.85rem;">{{ $reservation->user?->email ?? '' }}</span></td>
+                            <td style="padding: 16px;">{{ $reservation->guest_name ?? $reservation->user?->name ?? 'N/A' }}<br><span style="color: #666; font-size: 0.85rem;">{{ $reservation->user?->email ?? '' }}</span></td>
                             <td style="padding: 16px;">{{ $reservation->scooter?->brand ?? 'N/A' }} {{ $reservation->scooter?->model ?? '' }}</td>
                             <td style="padding: 16px;">{{ $reservation->start_time->format('d/m/Y H:i') }}</td>
                             <td style="padding: 16px;">{{ $reservation->end_time->format('d/m/Y H:i') }}</td>
