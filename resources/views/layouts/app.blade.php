@@ -363,7 +363,7 @@
         <div class="navbar-container">
             <!-- Logo -->
             <a href="{{ route('welcome') }}" class="navbar-logo">
-                <img src="{{ route('storage.logo', ['filename' => 'logo.jpeg']) }}" alt="VoltRide Logo" style="width: 60px; height: 60px; object-fit: contain; display: flex; align-items: center;">
+                <img src="{{ asset('logos/logo.jpeg') }}" alt="VoltRide Logo" style="width: 60px; height: 60px; object-fit: contain; display: flex; align-items: center;">
                 <span style="margin-left: 8px;">VoltRide</span>
             </a>
 
