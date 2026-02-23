@@ -134,7 +134,7 @@
 
         <div class="stat-card warning">
             <h3 style="color: #4a5568; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">💰 Revenu Total</h3>
-            <p class="stat-number">{{ number_format($totalRevenue, 0) }}€</p>
+                <p class="stat-number">{{ number_format($totalRevenue, 0) }}$</p>
             <p style="color: #f59e0b; font-size: 0.875rem; font-weight: 600;">📈 {{ number_format($monthlyRevenue, 0) }}€ ce mois</p>
         </div>
 

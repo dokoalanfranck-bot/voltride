@@ -238,7 +238,7 @@
 
                 <div class="price-section">
                     <div style="font-size: 14px; color: rgba(15, 23, 42, 0.7);">Prix Total Estimé</div>
-                    <div class="total-price">{{ number_format($reservation->total_price, 2) }}€</div>
+                        <div class="total-price">{{ number_format($reservation->total_price, 2) }}$</div>
                     <div style="font-size: 13px; color: rgba(15, 23, 42, 0.7);">Paiement sur place</div>
                 </div>
             </div>

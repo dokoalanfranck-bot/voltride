@@ -125,7 +125,9 @@
                                 </span>
                             </td>
                             <td style="padding: 16px;">{{ number_format($scooter->price_hour, 2) }} €</td>
+                                <td style="padding: 16px;">{{ number_format($scooter->price_hour, 2) }} $</td>
                             <td style="padding: 16px;">{{ number_format($scooter->price_day, 2) }} €</td>
+                                <td style="padding: 16px;">{{ number_format($scooter->price_day, 2) }} $</td>
                             <td style="padding: 16px;">{{ $scooter->battery_level ?? 'N/A' }}%</td>
                             <td style="padding: 16px; display: flex; gap: 8px;">
                                 <a href="{{ route('admin.scooters.edit', $scooter) }}" style="

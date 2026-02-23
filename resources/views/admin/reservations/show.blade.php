@@ -127,6 +127,7 @@
                     <div>
                         <p style="font-size: 0.85rem; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Prix total</p>
                         <p style="font-size: 1.5rem; font-weight: 800; color: var(--green-primary);">{{ $reservation->total_price ? number_format($reservation->total_price, 2) . ' €' : 'N/A' }}</p>
+                            <p style="font-size: 1.5rem; font-weight: 800; color: var(--green-primary);">{{ $reservation->total_price ? number_format($reservation->total_price, 2) . ' $' : 'N/A' }}</p>
                     </div>
                 </div>
             </div>

@@ -330,7 +330,7 @@
 
                 <div class="price-highlight">
                     <div class="price-label">Montant Total Estimé</div>
-                    <div class="total-price">{{ number_format($reservation->total_price, 2) }}€</div>
+                        <div class="total-price">{{ number_format($reservation->total_price, 2) }}$</div>
                     <div class="price-label">Paiement sur place</div>
                 </div>
             </div>

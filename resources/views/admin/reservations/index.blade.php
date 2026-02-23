@@ -167,6 +167,7 @@
                                 </span>
                             </td>
                             <td style="padding: 16px; font-weight: 600; color: #1f7550;">{{ $reservation->total_price ? number_format($reservation->total_price, 2) . ' €' : 'N/A' }}</td>
+                                <td style="padding: 16px; font-weight: 600; color: #1f7550;">{{ $reservation->total_price ? number_format($reservation->total_price, 2) . ' $' : 'N/A' }}</td>
                             <td style="padding: 16px;">
                                 <a href="{{ route('admin.reservations.show', $reservation) }}" style="
                                     display: inline-block;
