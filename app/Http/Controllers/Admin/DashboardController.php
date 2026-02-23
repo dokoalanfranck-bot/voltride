@@ -51,7 +51,8 @@ class DashboardController extends Controller
             ->get();
 
         // Recent reservations
-        $recentReservations = Reservation::latest()
+        $recentReservations = Reservation::with('user')
+            ->latest()
             ->take(10)
             ->get();
 
