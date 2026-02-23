@@ -14,6 +14,13 @@
         body {
             background-color: #f5f5f5;
         }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .bg-white {
+            animation: slideIn 0.6s ease-out;
+        }
     </style>
 </head>
 <body class="bg-gray-50">

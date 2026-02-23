@@ -1,56 +1,122 @@
 @extends('layouts.app')
 
-@section('title', 'Parcourir - ScooterRent')
+@section('title', 'Parcourir - VoltRide')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 py-12">
-    <!-- En-tête -->
-    <div style="text-align: center; margin-bottom: 60px;">
-        <h1 style="font-size: 2.5rem; font-weight: 800; color: #1f7550; margin-bottom: 20px;">Nos Trottinettes Disponibles</h1>
-        <p style="color: #4a5568; font-size: 1.125rem; max-width: 600px; margin: 0 auto;">
-            Découvrez notre large gamme de trottinettes électriques modernes et bien entretenues. Sélectionnez celle qui vous convient et commencez votre aventure urbaine en toute sécurité et confort.
+@include('components.responsive-styles')
+
+<style>
+    @media (max-width: 767px) {
+        .filter-grid {
+            grid-template-columns: 1fr !important;
+        }
+        .scooter-grid {
+            grid-template-columns: 1fr !important;
+        }
+    }
+    
+    @media (min-width: 768px) and (max-width: 1024px) {
+        .scooter-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+    }
+    
+    .card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+        opacity: 0;
+        animation: fadeInUp 0.6s ease-out forwards;
+    }
+    
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.1s; }
+    .card:nth-child(3) { animation-delay: 0.15s; }
+    .card:nth-child(4) { animation-delay: 0.2s; }
+    .card:nth-child(5) { animation-delay: 0.25s; }
+    .card:nth-child(6) { animation-delay: 0.3s; }
+
+    .badge-available {
+        background: #10b981;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-rented {
+        background: #f59e0b;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    }
+</style>
+
+<div style="max-width: 1200px; margin: 0 auto; padding: 1rem 1.5rem; overflow-x: hidden;">
+    <!-- Header -->
+    <div style="text-align: center; margin-bottom: clamp(40px, 8vw, 60px);">
+        <h1 style="font-size: clamp(1.8rem, 6vw, 2.5rem); font-weight: 800; color: #0a9b3a; margin-bottom: 20px;">Nos Trottinettes</h1>
+        <p style="color: #4a5568; font-size: clamp(1rem, 2vw, 1.125rem); max-width: 600px; margin: 0 auto; line-height: 1.6;">
+            Découvrez notre large gamme de trottinettes électriques modernes et bien entretenues. Légères, performantes, et écologiques!
         </p>
     </div>
 
-    <!-- Filtres (optionnel) -->
-    <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-        <p style="color: #1f7550; font-weight: 700; margin-bottom: 16px;">🔍 Filtrer et Trier</p>
-        <form method="GET" action="{{ route('scooters.index') }}" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; align-items: flex-end;">
+    <!-- Filters -->
+    <div style="background: white; padding: clamp(16px, 4vw, 24px); border-radius: 12px; margin-bottom: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+        <p style="color: #0a9b3a; font-weight: 700; margin-bottom: 16px; font-size: clamp(1rem, 2vw, 1.1rem);">🔍 Filtrer et Trier</p>
+        <form method="GET" action="{{ route('scooters.index') }}" class="filter-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; align-items: flex-end;">
             
-            <!-- Recherche -->
             <div>
-                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px;">Recherche</label>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Nom ou description..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem;">
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px; font-size: clamp(0.9rem, 2vw, 1rem);">Recherche</label>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Nom..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; box-sizing: border-box;">
             </div>
 
-            <!-- Prix/heure min -->
             <div>
-                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px;">Prix min (€/h)</label>
-                <input type="number" name="price_hour_min" value="{{ request('price_hour_min') }}" placeholder="0" step="0.01" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem;">
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px; font-size: clamp(0.9rem, 2vw, 1rem);">Prix min (€/h)</label>
+                <input type="number" name="price_hour_min" value="{{ request('price_hour_min') }}" placeholder="0" step="0.01" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; box-sizing: border-box;">
             </div>
 
-            <!-- Prix/heure max -->
             <div>
-                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px;">Prix max (€/h)</label>
-                <input type="number" name="price_hour_max" value="{{ request('price_hour_max') }}" placeholder="100" step="0.01" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem;">
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px; font-size: clamp(0.9rem, 2vw, 1rem);">Prix max (€/h)</label>
+                <input type="number" name="price_hour_max" value="{{ request('price_hour_max') }}" placeholder="100" step="0.01" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; box-sizing: border-box;">
             </div>
 
-            <!-- Vitesse min -->
             <div>
-                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px;">Vitesse min (km/h)</label>
-                <input type="number" name="min_speed" value="{{ request('min_speed') }}" placeholder="20" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem;">
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px; font-size: clamp(0.9rem, 2vw, 1rem);">Vitesse min (km/h)</label>
+                <input type="number" name="min_speed" value="{{ request('min_speed') }}" placeholder="20" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; box-sizing: border-box;">
             </div>
 
-            <!-- Batterie min -->
             <div>
-                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px;">Batterie min (%)</label>
-                <input type="number" name="min_battery" value="{{ request('min_battery') }}" placeholder="50" min="0" max="100" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem;">
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px; font-size: clamp(0.9rem, 2vw, 1rem);">Batterie min (%)</label>
+                <input type="number" name="min_battery" value="{{ request('min_battery') }}" placeholder="50" min="0" max="100" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; box-sizing: border-box;">
             </div>
 
-            <!-- Tri -->
             <div>
-                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px;">Trier par</label>
-                <select name="sort" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem;">
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px; font-size: clamp(0.9rem, 2vw, 1rem);">Trier par</label>
+                <select name="sort" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; box-sizing: border-box;">
                     <option value="name" {{ request('sort') === 'name' ? 'selected' : '' }}>Nom (A-Z)</option>
                     <option value="price_low" {{ request('sort') === 'price_low' ? 'selected' : '' }}>Prix: moins cher</option>
                     <option value="price_high" {{ request('sort') === 'price_high' ? 'selected' : '' }}>Prix: plus cher</option>
@@ -59,136 +125,95 @@
                 </select>
             </div>
 
-            <!-- Boutons -->
             <div style="display: flex; gap: 8px;">
-                <button type="submit" style="background: #1f7550; color: white; padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; flex: 1;">
+                <button type="submit" style="background: linear-gradient(135deg, #47F55B 0%, #07d65d 100%); color: #0f172a; padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: 700; flex: 1; font-size: clamp(0.9rem, 2vw, 1rem);">
                     🔍 Filtrer
                 </button>
-                <a href="{{ route('scooters.index') }}" style="background: #6c757d; color: white; padding: 10px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; text-align: center;">
+                <a href="{{ route('scooters.index') }}" style="background: #0a9b3a; color: white; padding: 10px 16px; border-radius: 8px; text-decoration: none; font-weight: 700; text-align: center; font-size: clamp(0.9rem, 2vw, 1rem);">
                     ↺ Réinitialiser
                 </a>
             </div>
         </form>
     </div>
 
-    <!-- Grille de scooters -->
+    <!-- Scooters Grid -->
     @if($scooters->count() > 0)
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="scooter-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 24px;">
             @foreach($scooters as $scooter)
             <div class="card">
                 <!-- Image -->
-                <div style="position: relative; width: 100%; height: 200px; background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%); overflow: hidden;">
-                    <img src="{{ $scooter->images->first()?->getUrl() ?? 'https://via.placeholder.com/400x250?text=No+Image' }}" alt="{{ $scooter->name }}" class="card-image" style="width: 100%; height: 100%; object-fit: contain; padding: 10px; background: #f9f9f9;">
+                <div style="position: relative; width: 100%; height: clamp(150px, 40vw, 200px); background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);">
+                    <img src="{{ $scooter->images->first()?->getUrl() ?? 'https://via.placeholder.com/400x250?text=No+Image' }}" alt="{{ $scooter->name }}" loading="lazy" style="width: 100%; height: 100%; object-fit: contain; padding: 10px; background: #f9f9f9;">
                     <div style="position: absolute; top: 10px; right: 10px;">
                         @if($scooter->isAvailable())
-                            <span class="badge-status badge-available">✓ Disponible</span>
+                            <span class="badge-available">✓ Disponible</span>
                         @else
-                            <span class="badge-status badge-rented">⏳ Louée</span>
+                            <span class="badge-rented">⏳ Louée</span>
                         @endif
                     </div>
                 </div>
                 
-                <!-- Contenu -->
-                <div style="padding: 20px;">
-                    <h3 style="font-size: 1.25rem; font-weight: 700; color: #1f7550; margin-bottom: 8px;">{{ $scooter->name }}</h3>
+                <!-- Content -->
+                <div style="padding: clamp(16px, 4vw, 20px);">
+                    <h3 style="font-size: clamp(1.1rem, 3vw, 1.25rem); font-weight: 700; color: #0a9b3a; margin: 0 0 8px 0;">{{ $scooter->name }}</h3>
                     
-                    <p style="color: #4a5568; font-size: 0.95rem; margin-bottom: 16px; line-height: 1.5;">
-                        {{ $scooter->description }}
+                    <p style="color: #4a5568; font-size: clamp(0.85rem, 2vw, 0.95rem); margin-bottom: 16px; line-height: 1.5;">
+                        {{ Str::limit($scooter->description, 80) }}
                     </p>
 
-                    <!-- Spécifications -->
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; font-size: 0.9rem; background: #f8f9fa; padding: 12px; border-radius: 8px;">
+                    <!-- Specs -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; font-size: clamp(0.8rem, 2vw, 0.9rem); background: #f8f9fa; padding: 12px; border-radius: 8px;">
                         <div>
-                            <p style="color: #999;">⚡ Vitesse max</p>
-                            <p style="font-weight: 700; color: #1f7550; font-size: 1.1rem;">{{ $scooter->max_speed }} km/h</p>
+                            <p style="color: #999; margin: 0 0 4px 0;">⚡ Vitesse max</p>
+                            <p style="font-weight: 700; color: #1f7550; margin: 0; font-size: clamp(1rem, 3vw, 1.1rem);">{{ $scooter->max_speed }} km/h</p>
                         </div>
                         <div>
-                            <p style="color: #999;">🔋 Batterie</p>
-                            <p style="font-weight: 700; color: #1f7550; font-size: 1.1rem;">{{ $scooter->battery_level }}%</p>
+                            <p style="color: #999; margin: 0 0 4px 0;">🔋 Batterie</p>
+                            <p style="font-weight: 700; color: #1f7550; margin: 0; font-size: clamp(1rem, 3vw, 1.1rem);">{{ $scooter->battery_level }}%</p>
                         </div>
                     </div>
 
-                    <!-- Tarifs -->
+                    <!-- Pricing -->
                     <div style="display: flex; gap: 8px; margin-bottom: 16px; background: linear-gradient(135deg, rgba(31,117,80,0.05) 0%, rgba(45,155,111,0.05) 100%); padding: 12px; border-radius: 8px; border-left: 4px solid #1f7550;">
                         <div style="flex: 1;">
-                            <p style="color: #999; font-size: 0.85rem;">À l'heure</p>
-                            <p style="font-size: 1.3rem; font-weight: 700; color: #1f7550;">{{ number_format($scooter->price_hour, 2) }}€</p>
+                            <p style="color: #999; font-size: clamp(0.75rem, 2vw, 0.85rem); margin: 0 0 4px 0;">À l'heure</p>
+                            <p style="font-size: clamp(1.1rem, 3vw, 1.3rem); font-weight: 700; color: #1f7550; margin: 0;">{{ number_format($scooter->price_hour, 2) }}€</p>
                         </div>
                         <div style="flex: 1;">
-                            <p style="color: #999; font-size: 0.85rem;">À la journée (24h)</p>
-                            <p style="font-size: 1.3rem; font-weight: 700; color: #1f7550;">{{ number_format($scooter->price_day, 2) }}€</p>
+                            <p style="color: #999; font-size: clamp(0.75rem, 2vw, 0.85rem); margin: 0 0 4px 0;">À la minute</p>
+                            <p style="font-size: clamp(1.1rem, 3vw, 1.3rem); font-weight: 700; color: #1f7550; margin: 0;">{{ number_format($scooter->price_minute, 2) }}€</p>
                         </div>
                     </div>
 
-                    <!-- Évaluation -->
+                    <!-- Rating -->
                     @if($scooter->reviews->count() > 0)
-                        <div style="margin-bottom: 16px; padding: 8px; background: #fffbf0; border-radius: 8px;">
-                            <div class="rating" style="font-size: 1.1rem; margin: 0; text-align: center;">
-                                ⭐ {{ number_format($scooter->getAverageRating(), 1) }} / 5 
-                                <span style="color: #999; font-size: 0.9rem;">({{ $scooter->reviews->count() }} avis)</span>
-                            </div>
+                        <div style="margin-bottom: 16px; padding: 8px; background: #fffbf0; border-radius: 8px; text-align: center; font-size: clamp(0.85rem, 2vw, 0.95rem);">
+                            ⭐ {{ number_format($scooter->getAverageRating(), 1) }} / 5 
+                            <span style="color: #999;">({{ $scooter->reviews->count() }})</span>
                         </div>
                     @else
-                        <div style="margin-bottom: 16px; padding: 8px; background: #f0f0f0; border-radius: 8px; text-align: center; color: #999; font-size: 0.9rem;">
-                            Pas d'avis encore - Soyez le premier !
+                        <div style="margin-bottom: 16px; padding: 8px; background: #f0f0f0; border-radius: 8px; text-align: center; color: #999; font-size: clamp(0.8rem, 2vw, 0.9rem);">
+                            Pas d'avis encore
                         </div>
                     @endif
 
-                    <!-- Boutons d'action -->
+                    <!-- Buttons -->
                     <div style="display: flex; gap: 8px;">
-                        <a href="{{ route('scooters.show', $scooter->id) }}" style="flex: 1;" class="btn-secondary" style="width: 100%; text-align: center;">
+                        <a href="{{ route('scooters.show', $scooter->id) }}" style="flex: 1; text-align: center; padding: 12px; background: #f0f0f0; color: #1f7550; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s; font-size: clamp(0.9rem, 2vw, 1rem);">
                             📋 Détails
                         </a>
-                        @auth
-                            <a href="{{ route('reservations.create', $scooter->id) }}" style="flex: 1;" class="btn-primary" style="width: 100%; text-align: center;">
-                                🚀 Réserver
-                            </a>
-                        @else
-                            <a href="{{ route('login') }}" style="flex: 1;" class="btn-primary" style="width: 100%; text-align: center;">
-                                🚀 Réserver
-                            </a>
-                        @endauth
+                        <a href="{{ route('reservations.create', $scooter->id) }}" style="flex: 1; text-align: center; padding: 12px; background: #1f7550; color: white; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s; font-size: clamp(0.9rem, 2vw, 1rem);">
+                            🚀 Réserver
+                        </a>
                     </div>
                 </div>
             </div>
-        @endforeach
+            @endforeach
         </div>
     @else
-        <div style="background: white; padding: 60px 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 40px;">
-            <div style="font-size: 3rem; margin-bottom: 20px;">🔍</div>
-            <h3 style="font-size: 1.5rem; font-weight: 700; color: #1f7550; margin-bottom: 12px;">Aucune trottinette ne correspond</h3>
-            <p style="color: #4a5568; margin-bottom: 20px;">Nous n'avons trouvé aucune trottinette correspondant à vos critères de filtrage.</p>
-            <p style="color: #999; margin-bottom: 24px;">Essayez d'ajuster vos filtres ou explorer toutes nos trottinettes disponibles.</p>
-            <a href="{{ route('scooters.index') }}" style="background: #1f7550; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block;">
-                Voir tous les modèles
-            </a>
+        <div style="text-align: center; padding: clamp(40px, 8vw, 60px); background: #f9f9f9; border-radius: 12px;">
+            <p style="color: #999; font-size: clamp(1rem, 2vw, 1.1rem); margin: 0;">Aucune trottinette ne correspond à vos critères. Essayez de réinitialiser les filtres.</p>
         </div>
     @endif
-
-    <!-- Pagination -->
-    @if($scooters->hasPages())
-        <div style="margin-top: 40px; display: flex; justify-content: center;">
-            {{ $scooters->links() }}
-        </div>
-    @endif
-
-    <!-- Section informative -->
-    <div style="margin-top: 80px; padding: 40px; background: linear-gradient(135deg, #f0fdf7 0%, #f0f9ff 100%); border-radius: 12px; border-left: 4px solid #1f7550;">
-        <h2 style="color: #1f7550; font-size: 1.75rem; font-weight: 700; margin-bottom: 20px;">💡 Pourquoi louer avec ScooterRent ?</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-                <h3 style="color: #1f7550; font-weight: 700; margin-bottom: 8px;">🛴 Trottinettes Modernes</h3>
-                <p style="color: #4a5568; line-height: 1.6;">Nos trottinettes sont régulièrement entretenues et mises à jour. Chaque modèle est testé avant chaque location pour garantir votre sécurité.</p>
-            </div>
-            <div>
-                <h3 style="color: #1f7550; font-weight: 700; margin-bottom: 8px;">💚 Écologique</h3>
-                <p style="color: #4a5568; line-height: 1.6;">Zéro émission de CO₂. Participez à la mobilité durable et contribuez à un avenir urbain plus vert et plus respirable.</p>
-            </div>
-            <div>
-                <h3 style="color: #1f7550; font-weight: 700; margin-bottom: 8px;">🔒 Sécurité Garantie</h3>
-                <p style="color: #4a5568; line-height: 1.6;">Assurance incluse dans chaque location. Système de sécurité avancé et support client disponible 24/7.</p>
-            </div>
-        </div>
-    </div>
 </div>
 @endsection

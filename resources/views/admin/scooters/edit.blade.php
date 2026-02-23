@@ -1,6 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .bg-white {
+        animation: slideIn 0.6s ease-out;
+    }
+    input:focus, textarea:focus, select:focus {
+        border-color: #07d65d !important;
+        box-shadow: 0 0 0 3px rgba(7, 214, 93, 0.2) !important;
+        outline: none;
+    }
+</style>
 <div class="max-w-2xl mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold mb-8">Edit Scooter</h1>
 

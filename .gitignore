@@ -1,3 +1,4 @@
+# Laravel specific
 /.phpunit.cache
 /node_modules
 /public/build
@@ -8,12 +9,51 @@
 .env
 .env.backup
 .env.production
+.env.local
+.env.*.local
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
 auth.json
 npm-debug.log
 yarn-error.log
+
+# IDE
 /.fleet
 /.idea
 /.vscode
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Logs
+/storage/logs/*.log
+*.log
+
+# Testing
+/coverage
+/.phpunit.cache
+
+# Build artifacts
+/public/build
+/public/mix-manifest.json
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+
+# Documentation archive (keep organized /docs only)
+/docs/archive/*.md
+
+# Debug files (prevent accidental commits)
+check_*.php
+test_*.php
+list_all_users.php
+debug.log
+

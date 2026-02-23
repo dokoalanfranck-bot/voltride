@@ -1,6 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    tbody tr {
+        animation: fadeIn 0.5s ease-out;
+    }
+    tbody tr:hover {
+        background-color: #f0fdf4;
+    }
+    input:focus, select:focus {
+        border-color: #07d65d !important;
+        box-shadow: 0 0 0 3px rgba(7, 214, 93, 0.2);
+        outline: none;
+    }
+</style>
 <div class="max-w-7xl mx-auto px-4 py-8">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
         <h1 style="font-size: 2rem; font-weight: 800; color: #1f7550;">Gestion des Réservations</h1>
@@ -98,8 +115,8 @@
                 <tbody>
                     @forelse ($reservations as $reservation)
                         <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s;">
-                            <td style="padding: 16px; font-weight: 600; color: #1f7550;">#{{ $reservation->id }}</td>
-                            <td style="padding: 16px;">{{ $reservation->user?->name ?? 'Utilisateur supprimé' }}</td>
+                            <td style="padding: 16px; font-weight: 600; color: #1f7550;">{{ $reservation->id }}</td>
+                            <td style="padding: 16px;">{{ $reservation->user?->name ?? 'N/A' }}<br><span style="color: #666; font-size: 0.85rem;">{{ $reservation->user?->email ?? '' }}</span></td>
                             <td style="padding: 16px;">{{ $reservation->scooter?->brand ?? 'N/A' }} {{ $reservation->scooter?->model ?? '' }}</td>
                             <td style="padding: 16px;">{{ $reservation->start_time->format('d/m/Y H:i') }}</td>
                             <td style="padding: 16px;">{{ $reservation->end_time->format('d/m/Y H:i') }}</td>

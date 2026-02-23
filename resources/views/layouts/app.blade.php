@@ -6,6 +6,31 @@
     <title>@yield('title', 'ScooterRent - Louez vos trottinettes électriques')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        :root {
+            /* Primary Colors */
+            --primary-gradient: linear-gradient(135deg, #47F55B 0%, #07d65d 100%);
+            --primary-bright: #47F55B;
+            --primary-dark: #07d65d;
+            --primary-darker: #0a9b3a;
+            --primary-light: #f0fdf4;
+            
+            /* Text Colors */
+            --text-primary: #0f172a;
+            --text-secondary: #4a5568;
+            --text-tertiary: #999;
+            
+            /* Status Colors */
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #dc2626;
+            --info: #3b82f6;
+            
+            /* Shadows */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 12px 24px rgba(7, 214, 93, 0.25);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,18 +39,18 @@
 
         body {
             background-color: white;
-            color: #2d3748;
+            color: var(--text-primary);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             line-height: 1.6;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #1f7550 0%, #2d9b6f 100%);
-            color: white;
+            background: var(--primary-gradient);
+            color: var(--text-primary);
             border: none;
             border-radius: 8px;
             padding: 12px 24px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
             text-decoration: none;
@@ -33,17 +58,17 @@
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(31, 117, 80, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(7, 214, 93, 0.3);
         }
 
         .btn-secondary {
             background: white;
-            color: #1f7550;
-            border: 2px solid #1f7550;
+            color: var(--primary-darker);
+            border: 2px solid var(--primary-darker);
             border-radius: 8px;
             padding: 10px 20px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
             text-decoration: none;
@@ -51,18 +76,20 @@
         }
 
         .btn-secondary:hover {
-            background: #f0fdf4;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            border-color: var(--primary-dark);
         }
 
         .card {
             background: white;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow-sm);
             transition: all 0.3s;
         }
 
         .card:hover {
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            box-shadow: var(--shadow-md);
         }
 
         .card-image {
@@ -82,7 +109,7 @@
 
         .badge-available {
             background: #d1fae5;
-            color: #065f46;
+            color: var(--primary-darker);
         }
 
         .badge-rented {
@@ -95,9 +122,9 @@
             position: sticky;
             top: 0;
             z-index: 50;
-            background: linear-gradient(135deg, #09B826 0%, #0a4874 100%);
+            background: var(--primary-gradient);
             color: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 16px rgba(7, 214, 93, 0.25);
         }
 
         .navbar-container {
@@ -189,7 +216,7 @@
             top: 64px;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, #1f7550 0%, #155d3b 100%);
+            background: var(--primary-gradient);
             padding: 16px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -243,7 +270,7 @@
 
         /* Footer */
         .footer {
-            background: linear-gradient(135deg, #1f7550 0%, #155d3b 100%);
+            background: var(--primary-gradient);
             color: white;
             padding: 48px 16px 24px;
             margin-top: 80px;
@@ -309,7 +336,26 @@
                 font-size: 0.95rem;
             }
         }
+
+        /* Responsive Utilities */
+        @media (max-width: 767px) {
+            .responsive-grid-2 { grid-template-columns: 1fr !important; }
+            .responsive-grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+            .responsive-grid-auto { grid-template-columns: 1fr !important; }
+            .responsive-flex-reverse { flex-direction: column-reverse !important; }
+            .sidebar-sticky { position: static !important; top: auto !important; }
+        }
+
+        @media (max-width: 479px) {
+            .responsive-grid-4 { grid-template-columns: 1fr !important; }
+        }
+
+        /* Font Scaling */
+        h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); }
+        h2 { font-size: clamp(1.3rem, 4vw, 2rem); }
+        h3 { font-size: clamp(1.1rem, 3vw, 1.5rem); }
     </style>
+
 </head>
 <body>
     <!-- Navigation -->

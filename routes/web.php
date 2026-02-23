@@ -36,19 +36,19 @@ Route::get('/logo/{filename}', [StorageController::class, 'getLogo'])
 Route::get('/scooters', [ScooterController::class, 'index'])->name('scooters.index');
 Route::get('/scooters/{scooter}', [ScooterController::class, 'show'])->name('scooters.show');
 
-// Client Routes
-Route::middleware('auth')->group(function () {
-    // Reservations
+// Public Reservation Routes (no authentication required for guests)
+Route::get('/scooters/{scooter}/reserve', [ReservationController::class, 'create'])->name('reservations.create');
+Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
+Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
+
+// Authenticated Client Routes
+    // Reservations (authenticated user only)
     Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
-    Route::get('/scooters/{scooter}/reserve', [ReservationController::class, 'create'])->name('reservations.create');
-    Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
-    Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
     Route::post('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
 
     // Payments
     Route::get('/reservations/{reservation}/payment', [PaymentController::class, 'show'])->name('reservations.payment');
     Route::post('/payments', [PaymentController::class, 'store'])->name('payments.store');
-});
 
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {

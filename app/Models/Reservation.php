@@ -19,8 +19,12 @@ class Reservation extends Model
         'total_price',
         'status',
         'payment_status',
+        'payment_method',
         'delay_minutes',
         'delay_fee',
+        'guest_name',
+        'guest_phone',
+        'guest_email',
     ];
 
     protected $casts = [
@@ -51,15 +55,15 @@ class Reservation extends Model
             return 0;
         }
 
-        $hours = $this->start_time->diffInHours($this->end_time);
-        $days = intdiv($hours, 24);
-        $remainingHours = $hours % 24;
+        $minutes = $this->start_time->diffInMinutes($this->end_time);
+        $hours = intdiv($minutes, 60);
+        $remainingMinutes = $minutes % 60;
 
-        $price = ($days * $this->scooter->price_day) + ($remainingHours * $this->scooter->price_hour);
+        // Price calculation: hours + remaining minutes
+        $price = ($hours * $this->scooter->price_hour) + ($remainingMinutes * $this->scooter->price_minute);
         
         if ($this->delay_minutes > 0) {
-            $delayHours = ceil($this->delay_minutes / 60);
-            $price += ($delayHours * $this->scooter->price_hour);
+            $price += ($this->delay_minutes * $this->scooter->price_minute);
         }
 
         return $price;

@@ -4,23 +4,39 @@
 <div class="max-w-7xl mx-auto px-4 py-8">
     <style>
         :root {
-            --green-primary: #1f7550;
-            --green-light: #2d9b6f;
-            --green-dark: #155d3b;
+            --green-primary: #0a9b3a;
+            --primary-gradient: linear-gradient(135deg, #47F55B 0%, #07d65d 100%);
+            --primary-light: #f0fdf4;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        tbody tr {
+            animation: fadeIn 0.5s ease-out;
+        }
+        tbody tr:hover {
+            background-color: #f0fdf4;
+        }
+        input:focus, select:focus {
+            border-color: #07d65d !important;
+            box-shadow: 0 0 0 3px rgba(7, 214, 93, 0.2);
+            outline: none;
         }
     </style>
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
         <h1 style="font-size: 2rem; font-weight: 800; color: var(--green-primary);">Gestion des Trottinettes</h1>
         <a href="{{ route('admin.scooters.create') }}" style="
-            background: var(--green-primary);
-            color: white;
+            background: var(--primary-gradient);
+            color: #0f172a;
             padding: 12px 24px;
             border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
-            transition: background 0.3s;
-        ">
+            transition: all 0.3s;
+            transform: translateY(0);
+        " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 12px 24px rgba(7, 214, 93, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
             + Ajouter une trottinette
         </a>
     </div>
@@ -32,13 +48,13 @@
         <form method="GET" action="{{ route('admin.scooters.index') }}" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
             <!-- Search -->
             <div>
-                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px;">Recherche (nom/marque/modèle)</label>
+                <label style="display: block; font-weight: 600; color: var(--green-primary); margin-bottom: 6px;">Recherche (nom/marque/modèle)</label>
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Chercher..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem;">
             </div>
 
             <!-- Availability Filter -->
             <div>
-                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px;">Disponibilité</label>
+                <label style="display: block; font-weight: 600; color: var(--green-primary); margin-bottom: 6px;">Disponibilité</label>
                 <select name="availability" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem;">
                     <option value="">Toutes</option>
                     <option value="available" {{ request('availability') === 'available' ? 'selected' : '' }}>Disponible</option>
@@ -48,19 +64,19 @@
 
             <!-- Min Price -->
             <div>
-                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px;">Prix min (€/h)</label>
+                <label style="display: block; font-weight: 600; color: var(--green-primary); margin-bottom: 6px;">Prix min (€/h)</label>
                 <input type="number" name="price_min" value="{{ request('price_min') }}" placeholder="0" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem;">
             </div>
 
             <!-- Max Price -->
             <div>
-                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px;">Prix max (€/h)</label>
+                <label style="display: block; font-weight: 600; color: var(--green-primary); margin-bottom: 6px;">Prix max (€/h)</label>
                 <input type="number" name="price_max" value="{{ request('price_max') }}" placeholder="999" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem;">
             </div>
 
             <!-- Buttons -->
             <div style="display: flex; gap: 8px; align-items: flex-end;">
-                <button type="submit" style="background: var(--green-primary); color: white; padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; flex: 1;">
+                <button type="submit" style="background: var(--primary-gradient); color: #0f172a; padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; flex: 1; transition: all 0.3s; transform: translateY(0);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 16px rgba(7, 214, 93, 0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                     🔍 Filtrer
                 </button>
                 <a href="{{ route('admin.scooters.index') }}" style="background: #6c757d; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; text-align: center;">
@@ -75,7 +91,7 @@
         <div style="overflow-x: auto;">
             <table style="width: 100%; border-collapse: collapse;">
                 <thead>
-                    <tr style="background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-light) 100%); color: white;">
+                    <tr style="background: var(--primary-gradient); color: #0f172a;">
                         <th style="padding: 16px; text-align: left; font-weight: 600;">Nom</th>
                         <th style="padding: 16px; text-align: left; font-weight: 600;">Marque</th>
                         <th style="padding: 16px; text-align: left; font-weight: 600;">Statut</th>
@@ -98,11 +114,11 @@
                                     font-size: 0.85rem;
                                     font-weight: 600;
                                     @if ($scooter->is_available)
-                                        background: #d4edda;
-                                        color: #155724;
+                                        background: #d1fae5;
+                                        color: var(--green-primary);
                                     @else
-                                        background: #f8d7da;
-                                        color: #721c24;
+                                        background: #fee2e2;
+                                        color: #991b1b;
                                     @endif
                                 ">
                                     {{ $scooter->is_available ? '✓ Disponible' : '✗ Indisponible' }}
@@ -114,14 +130,15 @@
                             <td style="padding: 16px; display: flex; gap: 8px;">
                                 <a href="{{ route('admin.scooters.edit', $scooter) }}" style="
                                     display: inline-block;
-                                    background: #007bff;
+                                    background: var(--green-primary);
                                     color: white;
                                     padding: 6px 12px;
                                     border-radius: 4px;
                                     text-decoration: none;
                                     font-size: 0.85rem;
                                     font-weight: 600;
-                                ">Éditer</a>
+                                    transition: all 0.3s;
+                                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(10, 155, 58, 0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">Éditer</a>
                                 <form method="POST" action="{{ route('admin.scooters.destroy', $scooter) }}" style="display: inline;">
                                     @csrf
                                     @method('DELETE')
@@ -134,7 +151,8 @@
                                         cursor: pointer;
                                         font-size: 0.85rem;
                                         font-weight: 600;
-                                    " onclick="return confirm('Êtes-vous sûr?')">Supprimer</button>
+                                        transition: all 0.3s;
+                                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(220, 53, 69, 0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="return confirm('Êtes-vous sûr?')">Supprimer</button>
                                 </form>
                             </td>
                         </tr>

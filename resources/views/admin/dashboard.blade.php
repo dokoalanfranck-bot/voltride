@@ -1,115 +1,238 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+         border-left: 4px solid transparent;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .stat-card.primary { border-left-color: #07d65d; }
+    .stat-card.success { border-left-color: #10b981; }
+    .stat-card.warning { border-left-color: #f59e0b; }
+    .stat-card.info { border-left-color: #3b82f6; }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #47F55B 0%, #07d65d 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0.5rem 0;
+    }
+
+    .quick-action {
+        background: linear-gradient(135deg, #47F55B 0%, #07d65d 100%);
+        color: #0f172a;
+        padding: 1.25rem;
+        border-radius: 12px;
+        text-decoration: none;
+        transition: all 0.3s;
+        display: block;
+        box-shadow: 0 2px 8px rgba(71, 245, 91, 0.2);
+    }
+
+    .quick-action:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(71, 245, 91, 0.3);
+    }
+
+    .section-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        padding: 1.5rem;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        font-size: 0.9rem;
+        border-collapse: collapse;
+    }
+
+    thead {
+        background: linear-gradient(135deg, rgba(71, 245, 91, 0.1) 0%, rgba(7, 214, 93, 0.1) 100%);
+    }
+
+    th {
+        padding: 12px 16px;
+        text-align: left;
+        font-weight: 700;
+        color: #0a9b3a;
+    }
+
+    tbody tr {
+        border-bottom: 1px solid #e2e8f0;
+        transition: background 0.2s;
+    }
+
+    tbody tr:hover {
+        background: #f9fafb;
+    }
+
+    td {
+        padding: 12px 16px;
+    }
+
+    .badge {
+        padding: 0.375rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .badge-success {
+        background: #d1fae5;
+        color: #0a9b3a;
+    }
+
+    .badge-warning {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    @media (max-width: 768px) {
+        .stat-number {
+            font-size: 2rem;
+        }
+    }
+</style>
+
 <div class="max-w-7xl mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8">Admin Dashboard</h1>
+    <h1 style="font-size: clamp(1.75rem, 5vw, 2.25rem); font-weight: 800; margin-bottom: 2rem; background: linear-gradient(135deg, #47F55B 0%, #07d65d 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+        📊 Tableau de bord Admin
+    </h1>
 
     <!-- Key Metrics -->
     <div class="grid md:grid-cols-4 gap-4 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-gray-600 text-sm font-semibold">Total Scooters</h3>
-            <p class="text-3xl font-bold">{{ $totalScooters }}</p>
-            <p class="text-green-600 text-sm mt-2">{{ $activeScooters }} available</p>
+        <div class="stat-card primary">
+            <h3 style="color: #4a5568; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">🛴 Total Trottinettes</h3>
+            <p class="stat-number">{{ $totalScooters }}</p>
+            <p style="color: #0a9b3a; font-size: 0.875rem; font-weight: 600;">✓ {{ $activeScooters }} disponibles</p>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-gray-600 text-sm font-semibold">Total Reservations</h3>
-            <p class="text-3xl font-bold">{{ $totalReservations }}</p>
-            <p class="text-green-600 text-sm mt-2">{{ $completedReservations }} completed</p>
+        <div class="stat-card success">
+            <h3 style="color: #4a5568; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">📋 Total Réservations</h3>
+            <p class="stat-number">{{ $totalReservations }}</p>
+            <p style="color: #10b981; font-size: 0.875rem; font-weight: 600;">✓ {{ $completedReservations }} complétées</p>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-gray-600 text-sm font-semibold">Total Revenue</h3>
-            <p class="text-3xl font-bold">${{ number_format($totalRevenue, 2) }}</p>
-            <p class="text-blue-600 text-sm mt-2">${{ number_format($monthlyRevenue, 2) }} this month</p>
+        <div class="stat-card warning">
+            <h3 style="color: #4a5568; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">💰 Revenu Total</h3>
+            <p class="stat-number">{{ number_format($totalRevenue, 0) }}€</p>
+            <p style="color: #f59e0b; font-size: 0.875rem; font-weight: 600;">📈 {{ number_format($monthlyRevenue, 0) }}€ ce mois</p>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-gray-600 text-sm font-semibold">Active Users</h3>
-            <p class="text-3xl font-bold">{{ $totalUsers }}</p>
-            <p class="text-purple-600 text-sm mt-2">{{ $occupancyRate }}% occupancy</p>
+        <div class="stat-card info">
+            <h3 style="color: #4a5568; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">👥 Utilisateurs Actifs</h3>
+            <p class="stat-number">{{ $totalUsers }}</p>
+            <p style="color: #3b82f6; font-size: 0.875rem; font-weight: 600;">📊 {{ $occupancyRate }}% d'occupation</p>
         </div>
     </div>
 
     <!-- Quick Actions -->
     <div class="grid md:grid-cols-3 gap-4 mb-8">
-        <a href="{{ route('admin.scooters.create') }}" class="bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700">
-            <h4 class="font-bold">Add New Scooter</h4>
-            <p class="text-sm">Create and configure a new scooter</p>
+        <a href="{{ route('admin.scooters.create') }}" class="quick-action">
+            <h4 style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">➕ Ajouter une Trottinette</h4>
+            <p style="font-size: 0.875rem; opacity: 0.9;">Créer et configurer une nouvelle trottinette</p>
         </a>
 
-        <a href="{{ route('admin.scooters.index') }}" class="bg-green-600 text-white p-4 rounded-lg hover:bg-green-700">
-            <h4 class="font-bold">Manage Scooters</h4>
-            <p class="text-sm">Edit, update or delete scooters</p>
+        <a href="{{ route('admin.scooters.index') }}" class="quick-action">
+            <h4 style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">⚙️ Gérer les Trottinettes</h4>
+            <p style="font-size: 0.875rem; opacity: 0.9;">Éditer, mettre à jour ou supprimer des trottinettes</p>
         </a>
 
-        <a href="{{ route('admin.reservations.index') }}" class="bg-purple-600 text-white p-4 rounded-lg hover:bg-purple-700">
-            <h4 class="font-bold">View Reservations</h4>
-            <p class="text-sm">Manage all user reservations</p>
+        <a href="{{ route('admin.reservations.index') }}" class="quick-action">
+            <h4 style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">📝 Voir les Réservations</h4>
+            <p style="font-size: 0.875rem; opacity: 0.9;">Gérer toutes les réservations utilisateur</p>
         </a>
     </div>
 
-    <!-- Top Scooters -->
+    <!-- Top Scooters & Stats -->
     <div class="grid md:grid-cols-2 gap-8 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-bold mb-4">Top Scooters</h3>
-            <div class="space-y-3">
-                @foreach($topScooters as $scooter)
-                <div class="flex justify-between items-center pb-3 border-b">
-                    <div>
-                        <p class="font-semibold">{{ $scooter->name }}</p>
-                        <p class="text-sm text-gray-600">{{ $scooter->reservations_count }} reservations</p>
+        <div class="section-card">
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; color: #0a9b3a;">🏆 Top Trottinettes</h3>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                @foreach($topScooters as $index => $scooter)
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: linear-gradient(135deg, rgba(71, 245, 91, 0.05) 0%, rgba(7, 214, 93, 0.05) 100%); border-radius: 8px; border-left: 4px solid #07d65d;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span style="width: 32px; height: 32px; background: linear-gradient(135deg, #47F55B 0%, #07d65d 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #0f172a;">{{ $index + 1 }}</span>
+                        <div>
+                            <p style="font-weight: 600; margin: 0;">{{ $scooter->name }}</p>
+                            <p style="font-size: 0.875rem; color: #4a5568; margin: 0;">📊 {{ $scooter->reservations_count }} réservations</p>
+                        </div>
                     </div>
-                    <p class="font-bold">${{ number_format($scooter->price_day * $scooter->reservations_count / 4, 2) }}</p>
+                    <p style="font-weight: 700; font-size: 1.1rem; color: #0a9b3a; margin: 0;">{{ number_format($scooter->price_day * $scooter->reservations_count / 4, 0) }}€</p>
                 </div>
                 @endforeach
             </div>
         </div>
 
-        <!-- Last 30 Days -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-bold mb-4">Last 30 Days</h3>
-            <div class="space-y-2">
-                <p><strong>Completed Reservations:</strong> {{ $last30Days }}</p>
-                <p><strong>Revenue This Month:</strong> ${{ number_format($monthlyRevenue, 2) }}</p>
-                <p><strong>Average per Reservation:</strong> ${{ number_format($monthlyRevenue / max($last30Days, 1), 2) }}</p>
+        <div class="section-card">
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; color: #0a9b3a;">📈 30 Derniers Jours</h3>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div style="padding: 1rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); border-radius: 8px; border-left: 4px solid #10b981;">
+                    <p style="color: #4a5568; font-size: 0.875rem; margin: 0;">Réservations Complétées</p>
+                    <p style="font-size: 2rem; font-weight: 700; color: #10b981; margin: 0.5rem 0 0 0;">{{ $last30Days }}</p>
+                </div>
+                <div style="padding: 1rem; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%); border-radius: 8px; border-left: 4px solid #f59e0b;">
+                    <p style="color: #4a5568; font-size: 0.875rem; margin: 0;">Revenu Ce Mois</p>
+                    <p style="font-size: 2rem; font-weight: 700; color: #f59e0b; margin: 0.5rem 0 0 0;">{{ number_format($monthlyRevenue, 0) }}€</p>
+                </div>
+                <div style="padding: 1rem; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); border-radius: 8px; border-left: 4px solid #3b82f6;">
+                    <p style="color: #4a5568; font-size: 0.875rem; margin: 0;">Moyenne par Réservation</p>
+                    <p style="font-size: 2rem; font-weight: 700; color: #3b82f6; margin: 0.5rem 0 0 0;">{{ number_format($monthlyRevenue / max($last30Days, 1), 0) }}€</p>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Recent Reservations -->
-    <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-lg font-bold mb-4">Recent Reservations</h3>
-        <table class="w-full text-sm">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="px-4 py-2 text-left">User</th>
-                    <th class="px-4 py-2 text-left">Scooter</th>
-                    <th class="px-4 py-2 text-left">Date</th>
-                    <th class="px-4 py-2 text-left">Amount</th>
-                    <th class="px-4 py-2 text-left">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($recentReservations as $reservation)
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="px-4 py-2">{{ $reservation->user?->name ?? 'Utilisateur supprimé' }}</td>
-                    <td class="px-4 py-2">{{ $reservation->scooter?->name ?? 'Trottinette supprimée' }}</td>
-                    <td class="px-4 py-2">{{ $reservation->created_at->format('M d') }}</td>
-                    <td class="px-4 py-2">${{ number_format($reservation->total_price, 2) }}</td>
-                    <td class="px-4 py-2">
-                        <span class="px-2 py-1 rounded text-xs font-semibold
-                            @if($reservation->status === 'completed') bg-green-100 text-green-800
-                            @else bg-yellow-100 text-yellow-800
-                            @endif
-                        ">
-                            {{ ucfirst($reservation->status) }}
-                        </span>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+    <div class="section-card">
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; color: #0a9b3a;">🕐 Réservations Récentes</h3>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>👤 Utilisateur</th>
+                        <th>🛴 Trottinette</th>
+                        <th>📅 Date</th>
+                        <th>💰 Montant</th>
+                        <th>📊 Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($recentReservations as $reservation)
+                    <tr>
+                        <td><strong>{{ $reservation->user?->name ?? 'Utilisateur supprimé' }}</strong></td>
+                        <td>{{ $reservation->scooter?->name ?? 'Trottinette supprimée' }}</td>
+                        <td>{{ $reservation->created_at->format('d/m/Y') }}</td>
+                        <td><strong>{{ number_format($reservation->total_price, 2) }}€</strong></td>
+                        <td>
+                            <span class="badge {{ $reservation->status === 'completed' ? 'badge-success' : 'badge-warning' }}">
+                                {{ ucfirst($reservation->status) }}
+                            </span>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 @endsection

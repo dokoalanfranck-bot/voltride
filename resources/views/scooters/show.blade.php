@@ -1,59 +1,129 @@
 @extends('layouts.app')
 
-@section('title', $scooter->name . ' - ScooterRent')
+@section('title', $scooter->name . ' - VoltRide')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 py-12">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Images et galerie -->
-        <div class="lg:col-span-2">
-            <!-- Image principale -->
-            <div style="width: 100%; height: 400px; border-radius: 12px; overflow: hidden; background: #f0f0f0; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-                <img id="mainImage" src="{{ $scooter->images->first()?->getUrl() ?? 'https://via.placeholder.com/800x400?text=No+Image' }}" alt="{{ $scooter->name }}" style="width: 100%; height: 100%; object-fit: contain; background: #f9f9f9; padding: 20px;">
+@include('components.responsive-styles')
+
+<style>
+    @media (max-width: 1024px) {
+        .show-grid {
+            grid-template-columns: 1fr !important;
+        }
+        .sidebar {
+            position: static !important;
+            top: auto !important;
+        }
+    }
+    
+    .card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+        animation: fadeIn 0.6s ease-out forwards;
+    }
+
+    .thumbnail {
+        transition: all 0.3s ease;
+    }
+
+    .thumbnail:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(31, 117, 80, 0.3);
+    }
+
+    .reserve-btn {
+        transition: all 0.3s ease;
+    }
+
+    .reserve-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(71, 245, 91, 0.4);
+    }
+</style>
+
+<div style="max-width: 1200px; margin: 0 auto; padding: 1rem 1.5rem; overflow-x: hidden;">
+    <div class="show-grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 32px;">
+        <!-- Left: Images & Content -->
+        <div>
+            <!-- Main Image -->
+            <div class="fade-in" style="width: 100%; height: clamp(250px, 60vw, 400px); border-radius: 12px; overflow: hidden; background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%); margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                <img id="mainImage" src="{{ $scooter->images->first()?->getUrl() ?? 'https://via.placeholder.com/800x400?text=No+Image' }}" alt="{{ $scooter->name }}" loading="lazy" style="width: 100%; height: 100%; object-fit: contain; background: #f9f9f9; padding: 20px; transition: opacity 0.3s;">
             </div>
 
-            <!-- Galerie de miniatures -->
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
-                @forelse($scooter->images->take(4) as $image)
-                    <img src="{{ $image->getUrl() }}" alt="{{ $image->alt_text }}" onclick="document.getElementById('mainImage').src=this.src" style="width: 100%; height: 100px; border-radius: 8px; cursor: pointer; border: 2px solid #e2e8f0; transition: all 0.3s;" onmouseover="this.style.borderColor='#1f7550'" onmouseout="this.style.borderColor='#e2e8f0'">
+            <!-- Thumbnail Gallery -->
+            <div class="fade-in" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 8px; margin-bottom: 40px; animation-delay: 0.1s;">
+                @forelse($scooter->images->take(6) as $image)
+                    <img src="{{ $image->getUrl() }}" alt="{{ $image->alt_text }}" onclick="document.getElementById('mainImage').src=this.src" loading="lazy" class="thumbnail" style="width: 100%; aspect-ratio: 1; border-radius: 8px; cursor: pointer; border: 2px solid #e2e8f0; object-fit: contain; padding: 4px; background: #f9f9f9;" onmouseover="this.style.borderColor='#07d65d'" onmouseout="this.style.borderColor='#e2e8f0'">
                 @empty
                     @for($i = 1; $i <= 4; $i++)
-                        <img src="https://via.placeholder.com/150x120?text=Image+{{ $i }}" style="width: 100%; height: 100px; border-radius: 8px; border: 2px solid #e2e8f0;">
+                        <img src="https://via.placeholder.com/150x120?text=Image+{{ $i }}" style="width: 100%; aspect-ratio: 1; border-radius: 8px; border: 2px solid #e2e8f0; object-fit: contain;">
                     @endfor
                 @endforelse
             </div>
 
-            <!-- Description détaillée -->
-            <div style="margin-top: 40px;">
-                <h2 style="color: #1f7550; font-size: 1.75rem; font-weight: 700; margin-bottom: 16px;">À propos de cette trottinette</h2>
-                <p style="color: #4a5568; line-height: 1.8; font-size: 1.1rem; margin-bottom: 16px;">
+            <!-- Specs Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 40px;">
+                <div class="card" style="padding: 20px; text-align: center;">
+                    <p style="color: #999; font-size: 0.9rem; margin: 0 0 8px 0;">⚡ Vitesse max</p>
+                    <p style="font-size: clamp(1.3rem, 4vw, 1.8rem); font-weight: 700; color: #1f7550; margin: 0;">{{ $scooter->max_speed }}</p>
+                    <p style="color: #999; font-size: 0.85rem; margin: 4px 0 0 0;">km/h</p>
+                </div>
+                <div class="card" style="padding: 20px; text-align: center;">
+                    <p style="color: #999; font-size: 0.9rem; margin: 0 0 8px 0;">🔋 Batterie</p>
+                    <p style="font-size: clamp(1.3rem, 4vw, 1.8rem); font-weight: 700; color: #1f7550; margin: 0;">{{ $scooter->battery_level }}</p>
+                    <p style="color: #999; font-size: 0.85rem; margin: 4px 0 0 0;">%</p>
+                </div>
+                <div class="card" style="padding: 20px; text-align: center;">
+                    <p style="color: #999; font-size: 0.9rem; margin: 0 0 8px 0;">📏 Distance</p>
+                    <p style="font-size: clamp(1.3rem, 4vw, 1.8rem); font-weight: 700; color: #1f7550; margin: 0;">{{ $scooter->range_km ?? 'N/A' }}</p>
+                    <p style="color: #999; font-size: 0.85rem; margin: 4px 0 0 0;">km</p>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div style="margin-bottom: 40px;">
+                <h2 style="color: #0a9b3a; font-size: clamp(1.5rem, 5vw, 1.75rem); font-weight: 700; margin-bottom: 16px;">À propos</h2>
+                <p style="color: #4a5568; line-height: 1.8; font-size: clamp(0.95rem, 2vw, 1.1rem); margin-bottom: 16px;">
                     {{ $scooter->description }}
                 </p>
-                <p style="color: #4a5568; line-height: 1.8; margin-bottom: 16px;">
-                    <strong>{{ $scooter->name }}</strong> est l'une de nos trottinettes les plus populaires et fiables. Elle offre un excellent rapport qualité-prix avec une autonomie impressionnante et une vitesse de pointe de {{ $scooter->max_speed }} km/h. 
-                </p>
-                <p style="color: #4a5568; line-height: 1.8; margin-bottom: 16px;">
-                    Parfaite pour les trajets urbains quotidiens, cette trottinette combine performance et sécurité. Elle est équipée d'un système de freinage moderne, de pneus anti-crevaison et d'un affichage numérique de la batterie.
-                </p>
-                <p style="color: #4a5568; line-height: 1.8;">
-                    Tous nos utilisateurs apprécient son confort de conduite et sa maniabilité. Vous pouvez parcourir facilement la ville et atteindre vos destinations plus rapidement qu'en transports en commun.
+                <p style="color: #4a5568; line-height: 1.8; font-size: clamp(0.95rem, 2vw, 1rem);">
+                    <strong>{{ $scooter->name }}</strong> offre une combinaison optimale de performance et de confort. Elle est équipée d'un système de freinage moderne, de pneus anti-crevaison et d'un affichage numérique. Parfaite pour les trajets urbains quotidiens.
                 </p>
             </div>
 
-            <!-- Avis utilisateurs -->
-            <div style="margin-top: 40px; padding: 24px; background: #f8f9fa; border-radius: 12px;">
-                <h3 style="color: #1f7550; font-size: 1.5rem; font-weight: 700; margin-bottom: 24px;">
-                    ⭐ Avis des utilisateurs ({{ $scooter->reviews->count() }})
-                </h3>
+            <!-- Reviews -->
+            <div style="margin-bottom: 40px; padding: clamp(16px, 4vw, 24px); background: #f8f9fa; border-radius: 12px;">
+                <h3 style="color: #0a9b3a; font-size: clamp(1.2rem, 4vw, 1.5rem); font-weight: 700; margin-bottom: 24px;">⭐ Avis ({{ $scooter->reviews->count() }})</h3>
                 
                 @if($scooter->reviews->count() > 0)
-                    <div style="display: grid; gap: 16px;">
+                    @php $avgRating = $scooter->getAverageRating(); @endphp
+                    <div style="margin-bottom: 20px; padding: 16px; background: white; border-radius: 8px; text-align: center;">
+                        <p style="font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 700; color: #1f7550; margin: 0;">{{ number_format($avgRating, 1) }} / 5</p>
+                        <p style="color: #999; font-size: clamp(0.9rem, 2vw, 1rem); margin: 8px 0 0 0;">Basé sur {{ $scooter->reviews->count() }} avis</p>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
                         @foreach($scooter->reviews->take(5) as $review)
                             <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #1f7550;">
-                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
                                     <div>
-                                        <p style="font-weight: 700; color: #1f7550; margin-bottom: 4px;">{{ $review->user?->name ?? 'Utilisateur anonyme' }}</p>
-                                        <p style="font-size: 0.85rem; color: #999;">{{ $review->created_at->diffForHumans() }}</p>
+                                        <p style="font-weight: 700; color: #1f7550; margin: 0 0 4px 0; font-size: clamp(0.95rem, 2vw, 1rem);">{{ $review->user?->name ?? 'Anonyme' }}</p>
+                                        <p style="font-size: 0.85rem; color: #999; margin: 0;">{{ $review->created_at->diffForHumans() }}</p>
                                     </div>
                                     <div style="text-align: right;">
                                         @for($i = 1; $i <= 5; $i++)
@@ -61,105 +131,62 @@
                                         @endfor
                                     </div>
                                 </div>
-                                <p style="color: #4a5568; line-height: 1.6;">{{ $review->comment }}</p>
+                                <p style="color: #4a5568; line-height: 1.6; margin: 0; font-size: clamp(0.9rem, 2vw, 1rem);">{{ $review->comment }}</p>
                             </div>
                         @endforeach
                     </div>
                 @else
-                    <p style="color: #999; text-align: center; padding: 20px;">Aucun avis pour le moment. Soyez le premier à laisser un avis après votre location !</p>
+                    <p style="color: #999; text-align: center; padding: 20px; margin: 0;">Aucun avis pour le moment. Soyez le premier après votre location!</p>
                 @endif
             </div>
         </div>
 
-        <!-- Panneaude réservation (sidebar) -->
-        <div class="sticky" style="top: 100px; height: fit-content;">
-            <!-- Status et prix -->
-            <div class="card" style="padding: 24px; margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <!-- Right: Sidebar -->
+        <div class="sidebar" style="position: sticky; top: 100px; height: fit-content;">
+            <!-- Status -->
+            <div class="card" style="padding: clamp(16px, 4vw, 24px); margin-bottom: 20px;">
+                <div style="margin-bottom: 20px;">
                     @if($scooter->isAvailable())
-                        <span class="badge-status badge-available">✓ Disponible maintenant</span>
+                        <span style="background: #10b981; color: white; padding: 8px 14px; border-radius: 20px; font-weight: 600; font-size: clamp(0.85rem, 2vw, 0.95rem);">✓ Disponible</span>
                     @else
-                        <span class="badge-status badge-rented">⏳ Actuellement louée</span>
+                        <span style="background: #f59e0b; color: white; padding: 8px 14px; border-radius: 20px; font-weight: 600; font-size: clamp(0.85rem, 2vw, 0.95rem);">⏳ Louée</span>
                     @endif
                 </div>
 
-                <!-- Tarification -->
-                <div style="background: linear-gradient(135deg, #1f7550 0%, #155d3b 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-                    <p style="opacity: 0.9; margin-bottom: 8px;">TARIFS</p>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                        <div>
-                            <p style="opacity: 0.8; font-size: 0.9rem;">À l'heure</p>
-                            <p style="font-size: 1.75rem; font-weight: 700;">{{ number_format($scooter->price_hour, 2) }}€</p>
+                <!-- Pricing -->
+                <div style="background: linear-gradient(135deg, #1f7550 0%, #155d3b 100%); color: white; padding: clamp(16px, 4vw, 20px); border-radius: 12px; margin-bottom: 20px;">
+                    <p style="opacity: 0.9; margin-bottom: 12px; font-size: clamp(0.85rem, 2vw, 0.95rem);">TARIFS</p>
+                    <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                        <div style="flex: 1;">
+                            <p style="opacity: 0.8; font-size: clamp(0.8rem, 2vw, 0.85rem); margin: 0 0 4px 0;">À l'heure</p>
+                            <p style="font-size: clamp(1.3rem, 3vw, 1.75rem); font-weight: 700; margin: 0;">{{ number_format($scooter->price_hour, 2) }}€</p>
                         </div>
-                        <div>
-                            <p style="opacity: 0.8; font-size: 0.9rem;">À la journée</p>
-                            <p style="font-size: 1.75rem; font-weight: 700;">{{ number_format($scooter->price_day, 2) }}€</p>
+                        <div style="flex: 1;">
+                            <p style="opacity: 0.8; font-size: clamp(0.8rem, 2vw, 0.85rem); margin: 0 0 4px 0;">À la minute</p>
+                            <p style="font-size: clamp(1.3rem, 3vw, 1.75rem); font-weight: 700; margin: 0;">{{ number_format($scooter->price_minute, 2) }}€</p>
                         </div>
+                    </div>
+                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.2); font-size: clamp(0.75rem, 2vw, 0.9rem); opacity: 0.9;">
+                        ℹ️ Seuls les touristes peuvent louer pour 2 heures
                     </div>
                 </div>
 
-                <!-- Spécifications techniques -->
-                <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="color: #1f7550; font-weight: 700; margin-bottom: 12px;">📊 Spécifications</h4>
-                    <ul style="list-style: none; padding: 0; color: #4a5568; font-size: 0.95rem;">
-                        <li style="padding: 6px 0; border-bottom: 1px solid #e2e8f0;"><strong>Vitesse max :</strong> {{ $scooter->max_speed }} km/h</li>
-                        <li style="padding: 6px 0; border-bottom: 1px solid #e2e8f0;"><strong>Batterie :</strong> {{ $scooter->battery_level }}% chargée</li>
-                        <li style="padding: 6px 0; border-bottom: 1px solid #e2e8f0;"><strong>Code QR :</strong> {{ $scooter->qr_code }}</li>
-                        <li style="padding: 6px 0;"><strong>Localisation :</strong> {{ $scooter->location }}</li>
-                    </ul>
-                </div>
-
-                <!-- Bouton de réservation -->
-                @auth
-                    <a href="{{ route('reservations.create', $scooter->id) }}" class="btn-primary" style="width: 100%; padding: 16px; text-align: center; font-size: 1.1rem; display: block;">
-                        🚀 Réserver maintenant
-                    </a>
-                @else
-                    <a href="{{ route('login') }}" class="btn-primary" style="width: 100%; padding: 16px; text-align: center; font-size: 1.1rem; display: block;">
-                        ➡️ Se connecter pour réserver
-                    </a>
-                @endauth
-
-                <p style="text-align: center; color: #999; font-size: 0.9rem; margin-top: 12px;">
-                    💡 Accès immédiat après paiement
-                </p>
+                <!-- Reserve Button -->
+                <a href="{{ route('reservations.create', $scooter->id) }}" class="reserve-btn" style="display: block; width: 100%; padding: clamp(12px, 3vw, 16px); background: linear-gradient(135deg, #47F55B 0%, #07d65d 100%); color: #0f172a; text-align: center; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: clamp(1rem, 2vw, 1.1rem); cursor: pointer; border: none; box-sizing: border-box; box-shadow: 0 4px 12px rgba(71, 245, 91, 0.3);">
+                    🚀 Réserver maintenant
+                </a>
             </div>
 
-            <!-- Avis général -->
-            @if($scooter->reviews->count() > 0)
-                <div class="card" style="padding: 24px; text-align: center;">
-                    <div class="rating" style="font-size: 1.75rem; margin-bottom: 8px;">
-                        ⭐ {{ number_format($scooter->getAverageRating(), 1) }} / 5
-                    </div>
-                    <p style="color: #999; font-size: 0.9rem;">Basé sur {{ $scooter->reviews->count() }} avis utilisateurs</p>
-                </div>
-            @endif
-        </div>
-    </div>
-
-    <!-- Section similaire -->
-    <div style="margin-top: 80px; padding-top: 40px; border-top: 2px solid #e2e8f0;">
-        <h2 style="color: #1f7550; font-size: 1.75rem; font-weight: 700; margin-bottom: 30px;">Trottinettes similaires</h2>
-        <p style="color: #4a5568; margin-bottom: 20px;">Découvrez d'autres modèles populaires</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            @php
-                $similar = \App\Models\Scooter::where('id', '!=', $scooter->id)->take(3)->get();
-            @endphp
-            @forelse($similar as $s)
-                <div class="card">
-                    <img src="{{ $s->images->first()?->getUrl() ?? 'https://via.placeholder.com/300x200?text=No+Image' }}" alt="{{ $s->name }}" class="card-image">
-                    <div style="padding: 16px;">
-                        <h4 style="color: #1f7550; font-weight: 700; margin-bottom: 8px;">{{ $s->name }}</h4>
-                        <p style="color: #4a5568; font-size: 0.9rem; margin-bottom: 12px;">{{ Str::limit($s->description, 50) }}</p>
-                        <div style="display: flex; gap: 8px;">
-                            <span style="color: #1f7550; font-weight: 700;">{{ number_format($s->price_hour, 2) }}€/h</span>
-                            <a href="{{ route('scooters.show', $s->id) }}" class="btn-secondary" style="flex: 1; text-align: center; padding: 6px;">Voir →</a>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <p style="color: #999;">Pas d'autres modèles disponibles</p>
-            @endforelse
+            <!-- Info Card -->
+            <div class="card" style="padding: clamp(16px, 4vw, 20px);">
+                <p style="color: #0a9b3a; font-weight: 700; margin-bottom: 16px; font-size: clamp(1rem, 2vw, 1.1rem);">✅ Ce qui est inclus</p>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    <li style="margin-bottom: 12px; color: #4a5568; font-size: clamp(0.9rem, 2vw, 1rem);">✓ Assurance incluse</li>
+                    <li style="margin-bottom: 12px; color: #4a5568; font-size: clamp(0.9rem, 2vw, 1rem);">✓ dépot d'une pièce d'identité</li>
+                    <li style="margin-bottom: 12px; color: #4a5568; font-size: clamp(0.9rem, 2vw, 1rem);">✓ Paiement sur place</li>
+                    <li style="color: #4a5568; font-size: clamp(0.9rem, 2vw, 1rem);">✓ Casque fourni</li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>

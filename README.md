@@ -1,53 +1,271 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🛴 VoltRide - Location de Trottinettes Électriques
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="https://img.shields.io/badge/Laravel-11-FF2D20?style=for-the-badge&logo=laravel" alt="Laravel 11">
+  <img src="https://img.shields.io/badge/PHP-8.2-777BB4?style=for-the-badge&logo=php" alt="PHP 8.2">
+  <img src="https://img.shields.io/badge/Status-Production%20Ready-success?style=for-the-badge" alt="Status">
 </p>
 
-## About Laravel
+## 📋 À Propos
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+VoltRide est une application web moderne de location de trottinettes électriques, offrant une expérience utilisateur premium avec un design responsive et une interface administrative complète.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### ✨ Fonctionnalités Principales
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- 🛴 **Gestion Trottinettes**: CRUD complet avec upload d'images multiples
+- 📅 **Système de Réservations**: Booking fluide avec calcul automatique des prix
+- 💳 **Paiements Stripe**: Intégration sécurisée pour paiements en ligne
+- 📧 **Emails Automatiques**: Notifications client et admin lors des réservations
+- 👨‍💼 **Panel Admin**: Dashboard avec statistiques et gestion complète
+- 🎨 **Design Premium**: Interface moderne avec gradient vert fluo vibrant
+- 📱 **Responsive**: Optimisé mobile, tablette et desktop (WCAG AA+)
+- 🔒 **Sécurité**: Authentification, autorisations (Policies), protection CSRF
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🚀 Installation Rapide (5 min)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Prérequis
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP 8.2+
+- Composer 2.x
+- MySQL 8.0+
+- Node.js 20+
+- NPM/Yarn
 
-## Laravel Sponsors
+### Étapes
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+# 1. Cloner le projet
+git clone https://github.com/votre-compte/voltride.git
+cd voltride
 
-### Premium Partners
+# 2. Installer dépendances
+composer install
+npm install
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+# 3. Configuration
+cp .env.example .env
+php artisan key:generate
+
+# 4. Configurer .env
+# Éditer .env avec vos credentials MySQL et SMTP
+
+# 5. Database
+php artisan migrate --seed
+
+# 6. Compiler assets
+npm run build
+
+# 7. Lancer serveur
+php artisan serve
+```
+
+**Accès**: http://localhost:8000
+
+**Compte admin par défaut**:
+- Email: `admin@voltride.com`
+- Password: `admin123`
+
+---
+
+## 📚 Documentation
+
+Toute la documentation est disponible dans le dossier [`/docs`](./docs):
+
+- **[Guide Complet](./docs/README.md)** - Documentation principale
+- **[Système de Couleurs](./docs/03-color-system.md)** - Palette et variables CSS
+- **[Système d'Emails](./docs/05-email-system.md)** - Configuration SMTP et templates
+- **[Guide de Déploiement](./docs/10-deployment.md)** - Mise en production
+
+---
+
+## 🎨 Design
+
+### Identité Visuelle
+
+- **Gradient Principal**: `linear-gradient(135deg, #47F55B 0%, #07d65d 100%)`
+- **Système CSS Variables**: 18 variables personnalisées
+- **Responsive**: Breakpoints à 480px, 768px, 1024px
+- **Accessibilité**: WCAG AA+ validé
+
+### Technologies Frontend
+
+- Blade Templates (Laravel)
+- CSS3 avec Variables
+- JavaScript Vanilla
+- Vite (Build tool)
+
+---
+
+## 💻 Stack Technique
+
+| Couche | Technologies |
+|--------|-------------|
+| **Backend** | Laravel 11, PHP 8.2 |
+| **Database** | MySQL 8.0, Eloquent ORM |
+| **Frontend** | Blade, CSS3, JavaScript |
+| **Build** | Vite, NPM |
+| **Email** | Laravel Mail, SMTP |
+| **Paiement** | Stripe API |
+| **Auth** | Laravel Breeze |
+| **Storage** | Local/S3 (images) |
+
+---
+
+## 📂 Structure Projet
+
+```
+voltride/
+├── app/
+│   ├── Http/Controllers/     # Contrôleurs (Scooters, Reservations, Payments)
+│   ├── Models/               # Models Eloquent (User, Scooter, Reservation)
+│   ├── Policies/             # Authorization Policies
+│   └── Mail/                 # Mailable Classes (emails)
+├── resources/
+│   ├── views/                # Templates Blade
+│   │   ├── admin/            # Panel administrateur
+│   │   ├── auth/             # Pages authentification
+│   │   ├── emails/           # Templates emails
+│   │   ├── scooters/         # Pages trottinettes
+│   │   └── reservations/     # Pages réservations
+│   ├── css/                  # Styles personnalisés
+│   └── js/                   # JavaScript
+├── routes/
+│   ├── web.php               # Routes web
+│   └── api.php               # Routes API
+├── database/
+│   ├── migrations/           # Migrations DB
+│   └── seeders/              # Seeders
+├── docs/                     # 📚 Documentation complète
+└── public/                   # Assets publics
+```
+
+---
+
+## 🔐 Sécurité
+
+- ✅ **Authentification**: Laravel Breeze (2FA disponible)
+- ✅ **Autorisations**: Policies sur Reservations & Payments
+- ✅ **CSRF Protection**: Sur toutes les forms
+- ✅ **SQL Injection**: Protection via Eloquent ORM
+- ✅ **XSS Protection**: Blade escaping automatique `{{ }}`
+- ✅ **Rate Limiting**: 60 requêtes/minute
+- ✅ **Passwords**: Hashage bcrypt/argon2
+
+---
+
+## 🧪 Tests
+
+```bash
+# Tests unitaires
+php artisan test
+
+# Tests feature
+php artisan test --testsuite=Feature
+
+# Coverage
+php artisan test --coverage
+```
+
+---
+
+## 🚀 Déploiement
+
+Voir le [Guide de Déploiement Complet](./docs/10-deployment.md)
+
+### Checklist Production
+
+- [ ] `APP_DEBUG=false`
+- [ ] `APP_ENV=production`
+- [ ] SSL/HTTPS configuré
+- [ ] Cache activé (`config:cache`, `route:cache`)
+- [ ] Assets compilés (`npm run build`)
+- [ ] SMTP production configuré
+- [ ] Backups database automatisés
+
+---
+
+## 📧 Configuration Emails
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=votre-email@gmail.com
+MAIL_PASSWORD=votre-mot-de-passe-app
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=noreply@voltride.com
+MAIL_FROM_NAME="VoltRide"
+```
+
+Voir [Documentation Emails](./docs/05-email-system.md) pour configuration complète.
+
+---
+
+## 💳 Configuration Stripe
+
+```env
+STRIPE_KEY=pk_test_VOTRE_CLE_PUBLIQUE
+STRIPE_SECRET=sk_test_VOTRE_CLE_SECRETE
+```
+
+**Mode Production**: Remplacer `pk_test_` et `sk_test_` par clés live.
+
+---
+
+## 📊 Fonctionnalités Avancées
+
+- **Audit Logs**: Traçabilité complète des actions admin
+- **Multilingual**: Support français (extensible)
+- **Google Maps**: Localisation des trottinettes (optionnel)
+- **Analytics**: Statistiques détaillées dans le dashboard admin
+- **Reviews**: Système d'avis clients sur les locations
+
+---
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues!
+
+1. Fork le projet
+2. Créer une branche (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Ouvrir une Pull Request
+
+---
+
+## 📝 License
+
+Ce projet est sous licence MIT. Voir [LICENSE](LICENSE) pour plus de détails.
+
+---
+
+## 📞 Support
+
+- **Email**: support@voltride.com
+- **Documentation**: [docs/README.md](./docs/README.md)
+- **Issues**: [GitHub Issues](https://github.com/votre-compte/voltride/issues)
+
+---
+
+## 🎓 Crédits
+
+- **Framework**: [Laravel](https://laravel.com)
+- **Design Inspiration**: [VoltRide.com](https://voltride.com)
+- **Icons**: Font Awesome
+- **Fonts**: Google Fonts (Inter, Poppins)
+
+---
+
+<p align="center">
+  Made with ❤️ by <strong>VoltRide Team</strong>
+</p>
+
+<p align="center">
+  <strong>Version 1.0.0</strong> | Production Ready ✅
+</p>
 
 ## Contributing
 

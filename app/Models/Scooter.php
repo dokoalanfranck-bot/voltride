@@ -14,6 +14,7 @@ class Scooter extends Model
         'name',
         'description',
         'price_hour',
+        'price_minute',
         'price_day',
         'battery_level',
         'status',
@@ -25,6 +26,7 @@ class Scooter extends Model
 
     protected $casts = [
         'price_hour' => 'decimal:2',
+        'price_minute' => 'decimal:2',
         'price_day' => 'decimal:2',
         'max_speed' => 'decimal:2',
         'is_active' => 'boolean',

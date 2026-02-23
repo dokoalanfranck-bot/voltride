@@ -3,6 +3,25 @@
 @section('title', 'Paiement - voltride')
 
 @section('content')
+<style>
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .card {
+        animation: slideIn 0.6s ease-out;
+    }
+    .card:first-of-type {
+        animation-delay: 0.1s;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+    .card:last-of-type {
+        animation-delay: 0.2s;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+</style>
 <div class="max-w-4xl mx-auto px-4 py-12">
     <!-- En-tête -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
