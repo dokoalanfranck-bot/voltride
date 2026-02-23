@@ -219,7 +219,7 @@
                 <tbody>
                     @foreach($recentReservations as $reservation)
                     <tr>
-                        <td><strong>{{ $reservation->user?->name ?? 'Utilisateur supprimé' }}</strong></td>
+                        <td><strong>{{ $reservation->guest_name ?? $reservation->user?->name ?? 'N/A' }}</strong></td>
                         <td>{{ $reservation->scooter?->name ?? 'Trottinette supprimée' }}</td>
                         <td>{{ $reservation->created_at->format('d/m/Y') }}</td>
                         <td><strong>{{ number_format($reservation->total_price, 2) }}€</strong></td>
