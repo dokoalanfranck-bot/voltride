@@ -77,7 +77,7 @@
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
                     <div>
                         <p style="font-size: 0.85rem; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Client</p>
-                        <p style="font-size: 1.1rem; font-weight: 600; color: #333;">{{ $reservation->user?->name ?? 'Utilisateur supprimé' }}</p>
+                        <p style="font-size: 1.1rem; font-weight: 600; color: #333;">{{ $reservation->guest_name ?? $reservation->user?->name ?? 'N/A' }}</p>
                         <p style="font-size: 0.9rem; color: #666;">{{ $reservation->user?->email ?? 'N/A' }}</p>
                     </div>
 
