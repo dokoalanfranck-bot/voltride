@@ -11,6 +11,19 @@ use Illuminate\View\View;
 
 class AdminReservationController extends Controller
 {
+    /**
+     * Valide le paiement d'une réservation (admin)
+     */
+    public function validatePayment(Reservation $reservation): RedirectResponse
+    {
+        // Si Payment existe, on le met à jour, sinon on met juste Reservation
+        $payment = $reservation->payment;
+        if ($payment) {
+            $payment->update(['status' => 'completed']);
+        }
+        $reservation->update(['payment_status' => 'completed']);
+        return redirect()->back()->with('success', 'Paiement validé avec succès.');
+    }
     public function __construct()
     {
         $this->middleware(['auth', 'admin']);

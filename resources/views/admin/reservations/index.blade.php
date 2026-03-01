@@ -1,204 +1,173 @@
 @extends('layouts.app')
 
+@section('title', 'Gestion des Réservations - VoltRide Admin')
+
 @section('content')
-<style>
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    tbody tr {
-        animation: fadeIn 0.5s ease-out;
-    }
-    tbody tr:hover {
-        background-color: #f0fdf4;
-    }
-    input:focus, select:focus {
-        border-color: #07d65d !important;
-        box-shadow: 0 0 0 3px rgba(7, 214, 93, 0.2);
-        outline: none;
-    }
-</style>
-<div class="max-w-7xl mx-auto px-4 py-8">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
-        <h1 style="font-size: 2rem; font-weight: 800; color: #1f7550;">Gestion des Réservations</h1>
+<div class="container" style="padding-top: 40px; padding-bottom: 60px;">
+    <!-- Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 16px;">
+        <div>
+            <a href="{{ route('admin.dashboard') }}" style="color: var(--gray); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 8px;">← Retour au dashboard</a>
+            <h1 style="font-size: 2rem; font-weight: 800; letter-spacing: -1px;">
+                📋 Gestion des <span style="color: var(--primary);">Réservations</span>
+            </h1>
+        </div>
     </div>
 
-    <!-- Success/Error Messages -->
-    @if (session('success'))
-        <div style="background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+    <!-- Success Message -->
+    @if(session('success'))
+        <div class="alert alert-success" style="margin-bottom: 24px;">
             {{ session('success') }}
         </div>
     @endif
 
-    @if (session('error'))
-        <div style="background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
-            {{ session('error') }}
-        </div>
-    @endif
-
     <!-- Filters -->
-    <div style="background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 20px; margin-bottom: 24px;">
-        <h3 style="font-size: 1.1rem; font-weight: 700; color: #1f7550; margin-bottom: 16px;">Filtres</h3>
-        
-        <form method="GET" action="{{ route('admin.reservations.index') }}" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-            <!-- Search -->
-            <div>
-                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px;">Recherche (email/nom)</label>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Chercher..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem;">
-            </div>
+    <div class="card" style="margin-bottom: 24px;">
+        <div class="card-body">
+            <form action="{{ route('admin.reservations.index') }}" method="GET" style="display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end;">
+                <div class="form-group" style="flex: 1; min-width: 150px; margin-bottom: 0;">
+                    <label class="form-label">Statut</label>
+                    <select name="status" class="form-input">
+                        <option value="">Tous</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>En attente</option>
+                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>En cours</option>
+                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Terminées</option>
+                        <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Annulées</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 1; min-width: 150px; margin-bottom: 0;">
+                    <label class="form-label">Paiement</label>
+                    <select name="payment_status" class="form-input">
+                        <option value="">Tous</option>
+                        <option value="pending" {{ request('payment_status') == 'pending' ? 'selected' : '' }}>En attente</option>
+                        <option value="paid" {{ request('payment_status') == 'paid' ? 'selected' : '' }}>Payé</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">🔍 Filtrer</button>
+                <a href="{{ route('admin.reservations.index') }}" class="btn btn-secondary">Réinitialiser</a>
+            </form>
+        </div>
+    </div>
 
-            <!-- Status Filter -->
-            <div>
-                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px;">Statut</label>
-                <select name="status" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem;">
-                    <option value="">Tous les statuts</option>
-                    <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>En attente</option>
-                    <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>En cours</option>
-                    <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Complètée</option>
-                    <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Annulée</option>
-                </select>
+    <!-- Stats -->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px;">
+        <div class="card">
+            <div class="card-body" style="text-align: center;">
+                <p style="color: var(--gray); font-size: 0.85rem; margin-bottom: 8px;">Total</p>
+                <p style="font-size: 2rem; font-weight: 800; color: var(--primary);">{{ $reservations->total() }}</p>
             </div>
-
-            <!-- Payment Status Filter -->
-            <div>
-                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px;">Statut Paiement</label>
-                <select name="payment_status" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem;">
-                    <option value="">Tous les paiements</option>
-                    <option value="pending" {{ request('payment_status') === 'pending' ? 'selected' : '' }}>En attente</option>
-                    <option value="completed" {{ request('payment_status') === 'completed' ? 'selected' : '' }}>Payé</option>
-                    <option value="failed" {{ request('payment_status') === 'failed' ? 'selected' : '' }}>Échoué</option>
-                    <option value="refunded" {{ request('payment_status') === 'refunded' ? 'selected' : '' }}>Remboursé</option>
-                </select>
+        </div>
+        <div class="card">
+            <div class="card-body" style="text-align: center;">
+                <p style="color: var(--gray); font-size: 0.85rem; margin-bottom: 8px;">En attente</p>
+                <p style="font-size: 2rem; font-weight: 800; color: #f59e0b;">{{ $reservations->where('status', 'pending')->count() }}</p>
             </div>
-
-            <!-- Date From -->
-            <div>
-                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px;">Du</label>
-                <input type="date" name="date_from" value="{{ request('date_from') }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem;">
+        </div>
+        <div class="card">
+            <div class="card-body" style="text-align: center;">
+                <p style="color: var(--gray); font-size: 0.85rem; margin-bottom: 8px;">En cours</p>
+                <p style="font-size: 2rem; font-weight: 800; color: #3b82f6;">{{ $reservations->where('status', 'active')->count() }}</p>
             </div>
-
-            <!-- Date To -->
-            <div>
-                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 6px;">Au</label>
-                <input type="date" name="date_to" value="{{ request('date_to') }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem;">
+        </div>
+        <div class="card">
+            <div class="card-body" style="text-align: center;">
+                <p style="color: var(--gray); font-size: 0.85rem; margin-bottom: 8px;">Terminées</p>
+                <p style="font-size: 2rem; font-weight: 800; color: #22c55e;">{{ $reservations->where('status', 'completed')->count() }}</p>
             </div>
-
-            <!-- Buttons -->
-            <div style="display: flex; gap: 8px; align-items: flex-end;">
-                <button type="submit" style="background: #1f7550; color: white; padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; flex: 1;">
-                    🔍 Filtrer
-                </button>
-                <a href="{{ route('admin.reservations.index') }}" style="background: #6c757d; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; text-align: center;">
-                    ↺ Réinitialiser
-                </a>
-            </div>
-        </form>
+        </div>
     </div>
 
     <!-- Reservations Table -->
-    <div style="background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;">
-        <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="background: linear-gradient(135deg, #1f7550 0%, #2d9b6f 100%); color: white;">
-                        <th style="padding: 16px; text-align: left; font-weight: 600;">ID</th>
-                        <th style="padding: 16px; text-align: left; font-weight: 600;">Client</th>
-                        <th style="padding: 16px; text-align: left; font-weight: 600;">Trottinette</th>
-                        <th style="padding: 16px; text-align: left; font-weight: 600;">Début</th>
-                        <th style="padding: 16px; text-align: left; font-weight: 600;">Fin</th>
-                        <th style="padding: 16px; text-align: left; font-weight: 600;">Statut</th>
-                        <th style="padding: 16px; text-align: left; font-weight: 600;">Paiement</th>
-                        <th style="padding: 16px; text-align: left; font-weight: 600;">Prix</th>
-                        <th style="padding: 16px; text-align: left; font-weight: 600;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($reservations as $reservation)
-                        <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s;">
-                            <td style="padding: 16px; font-weight: 600; color: #1f7550;">{{ $reservation->id }}</td>
-                            <td style="padding: 16px;">{{ $reservation->guest_name ?? $reservation->user?->name ?? 'N/A' }}<br><span style="color: #666; font-size: 0.85rem;">{{ $reservation->user?->email ?? '' }}</span></td>
-                            <td style="padding: 16px;">{{ $reservation->scooter?->brand ?? 'N/A' }} {{ $reservation->scooter?->model ?? '' }}</td>
-                            <td style="padding: 16px;">{{ $reservation->start_time->format('d/m/Y H:i') }}</td>
-                            <td style="padding: 16px;">{{ $reservation->end_time->format('d/m/Y H:i') }}</td>
-                            <td style="padding: 16px;">
-                                <span style="
-                                    padding: 6px 12px;
-                                    border-radius: 20px;
-                                    font-size: 0.85rem;
-                                    font-weight: 600;
-                                    @if ($reservation->status === 'pending')
-                                        background: #fff3cd;
-                                        color: #856404;
-                                    @elseif ($reservation->status === 'active')
-                                        background: #d1ecf1;
-                                        color: #0c5460;
-                                    @elseif ($reservation->status === 'completed')
-                                        background: #d4edda;
-                                        color: #155724;
-                                    @elseif ($reservation->status === 'cancelled')
-                                        background: #f8d7da;
-                                        color: #721c24;
-                                    @endif
-                                ">
-                                    {{ ucfirst($reservation->status) }}
-                                </span>
-                            </td>
-                            <td style="padding: 16px;">
-                                <span style="
-                                    padding: 6px 12px;
-                                    border-radius: 20px;
-                                    font-size: 0.85rem;
-                                    font-weight: 600;
-                                    @if ($reservation->payment_status === 'pending')
-                                        background: #fff3cd;
-                                        color: #856404;
-                                    @elseif ($reservation->payment_status === 'completed')
-                                        background: #d4edda;
-                                        color: #155724;
-                                    @elseif ($reservation->payment_status === 'failed')
-                                        background: #f8d7da;
-                                        color: #721c24;
-                                    @elseif ($reservation->payment_status === 'refunded')
-                                        background: #e7e7ff;
-                                        color: #3f3fcc;
-                                    @endif
-                                ">
-                                    {{ ucfirst($reservation->payment_status) }}
-                                </span>
-                            </td>
-                            <td style="padding: 16px; font-weight: 600; color: #1f7550;">{{ $reservation->total_price ? number_format($reservation->total_price, 2) . ' €' : 'N/A' }}</td>
-                                <td style="padding: 16px; font-weight: 600; color: #1f7550;">{{ $reservation->total_price ? number_format($reservation->total_price, 2) . ' $' : 'N/A' }}</td>
-                            <td style="padding: 16px;">
-                                <a href="{{ route('admin.reservations.show', $reservation) }}" style="
-                                    display: inline-block;
-                                    background: #1f7550;
-                                    color: white;
-                                    padding: 8px 16px;
-                                    border-radius: 6px;
-                                    text-decoration: none;
-                                    font-weight: 600;
-                                    font-size: 0.85rem;
-                                    transition: background 0.3s;
-                                ">Voir</a>
-                            </td>
-                        </tr>
-                    @empty
+    <div class="card">
+        <div class="card-body">
+            <div class="table-container">
+                <table>
+                    <thead>
                         <tr>
-                            <td colspan="9" style="padding: 32px; text-align: center; color: #999;">
-                                Aucune réservation trouvée
-                            </td>
+                            <th>ID</th>
+                            <th>Client</th>
+                            <th>Trottinette</th>
+                            <th>Période</th>
+                            <th>Statut</th>
+                            <th>Paiement</th>
+                            <th>Prix</th>
+                            <th>Actions</th>
                         </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @forelse($reservations as $reservation)
+                            <tr>
+                                <td style="font-weight: 600; color: var(--primary);">#{{ $reservation->id }}</td>
+                                <td>
+                                    <p style="font-weight: 600;">{{ $reservation->guest_name ?? $reservation->user?->name ?? 'N/A' }}</p>
+                                    <p style="color: var(--gray); font-size: 0.85rem;">{{ $reservation->guest_email ?? $reservation->user?->email ?? '' }}</p>
+                                </td>
+                                <td>{{ $reservation->scooter?->name ?? 'N/A' }}</td>
+                                <td>
+                                    <p style="font-size: 0.85rem;">{{ $reservation->start_time?->format('d/m/Y H:i') }}</p>
+                                    <p style="color: var(--gray); font-size: 0.85rem;">{{ $reservation->end_time?->format('d/m/Y H:i') }}</p>
+                                </td>
+                                <td>
+                                    @if($reservation->status === 'pending')
+                                        <span class="badge badge-warning">⏳ En attente</span>
+                                    @elseif($reservation->status === 'active')
+                                        <span class="badge badge-info">✓ En cours</span>
+                                    @elseif($reservation->status === 'completed')
+                                        <span class="badge badge-success">✓ Terminée</span>
+                                    @else
+                                        <span class="badge badge-danger">✗ Annulée</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($reservation->payment_status === 'pending')
+                                        <span class="badge badge-warning">💳 En attente</span>
+                                    @elseif($reservation->payment_status === 'paid')
+                                        <span class="badge badge-success">💳 Payé</span>
+                                    @else
+                                        <span class="badge badge-info">💳 Remboursé</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <span class="price">{{ number_format($reservation->total_price, 2) }} $</span>
+                                </td>
+                                <td>
+                                    <a href="{{ route('admin.reservations.show', $reservation) }}" class="btn btn-secondary" style="padding: 8px 12px; font-size: 0.85rem;">
+                                        👁️ Voir
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" style="text-align: center; padding: 40px;">
+                                    <div style="font-size: 3rem; margin-bottom: 16px; opacity: 0.3;">📋</div>
+                                    <p style="color: var(--gray);">Aucune réservation trouvée</p>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            @if($reservations->hasPages())
+                <div style="margin-top: 24px; display: flex; justify-content: center;">
+                    {{ $reservations->links() }}
+                </div>
+            @endif
         </div>
     </div>
-
-    <!-- Pagination -->
-    @if ($reservations->hasPages())
-        <div style="margin-top: 32px;">
-            {{ $reservations->links() }}
-        </div>
-    @endif
 </div>
+
+<style>
+    @media (max-width: 768px) {
+        .container > div:nth-child(4) {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+    }
+    @media (max-width: 500px) {
+        .container > div:nth-child(4) {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
 @endsection

@@ -3,86 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Réinitialiser le mot de passe - ScooterRent</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Réinitialiser le mot de passe - VoltRide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --green-primary: #0a9b3a;
-            --primary-gradient: linear-gradient(135deg, #47F55B 0%, #07d65d 100%);
+            --primary: #00FF6A;
+            --primary-dark: #00CC55;
+            --dark: #0a0a0a;
+            --dark-light: #1a1a1a;
+            --dark-lighter: #2a2a2a;
+            --gray: #888;
+            --white: #ffffff;
         }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            background: var(--primary-gradient);
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
         }
-        .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 12px 32px rgba(0,0,0,0.15);
-            animation: slideUp 0.6s ease-out;
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(0, 255, 106, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 70%, rgba(0, 255, 106, 0.05) 0%, transparent 50%);
+            animation: bgFloat 20s ease-in-out infinite;
         }
+        
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-5%, -5%); }
+        }
+        
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        input:focus {
-            border-color: #07d65d !important;
-            box-shadow: 0 0 0 3px rgba(7, 214, 93, 0.2) !important;
+        
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 420px;
+            padding: 0 20px;
+        }
+        
+        .card {
+            background: var(--dark-light);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 48px 40px;
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin: 0 auto 16px;
+            box-shadow: 0 0 30px rgba(0, 255, 106, 0.3);
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: -1px;
+        }
+        
+        .logo h1 span {
+            color: var(--primary);
+        }
+        
+        .logo p {
+            color: var(--gray);
+            margin-top: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--dark-lighter);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 1rem;
+            color: var(--white);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        .form-input:focus {
             outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 255, 106, 0.2);
+        }
+        
+        .form-input::placeholder {
+            color: var(--gray);
+        }
+        
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--dark);
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            margin-top: 8px;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 106, 0.3);
+        }
+        
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .back-home {
+            text-align: center;
+            margin-top: 24px;
+        }
+        
+        .back-home a {
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        
+        .back-home a:hover {
+            color: var(--white);
         }
     </style>
 </head>
 <body>
-    <div class="card w-full max-w-md mx-4 px-8 py-12">
-        <div class="text-center mb-8">
-            <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--green-primary); margin-bottom: 8px;">Réinitialiser le mot de passe</h1>
-        </div>
-
-        <form class="space-y-4" action="{{ route('password.update') }}" method="POST">
-            @csrf
-
-            <input type="hidden" name="token" value="{{ $request->route('token') }}">
+    <div class="container">
+        <div class="card">
+            <div class="logo">
+                <div class="logo-icon">🔐</div>
+                <h1>Volt<span>Ride</span></h1>
+                <p>Créez un nouveau mot de passe</p>
+            </div>
 
             @if ($errors->any())
-                <div style="background: #fee; border: 1px solid #fcc; color: #c33; padding: 12px; border-radius: 8px;">
-                    <div style="font-size: 0.9rem;">
-                        @foreach ($errors->all() as $error)
-                            <p>{{ $error }}</p>
-                        @endforeach
-                    </div>
+                <div class="alert-error">
+                    @foreach ($errors->all() as $error)
+                        <p>{{ $error }}</p>
+                    @endforeach
                 </div>
             @endif
 
-            <div>
-                <label for="email" style="display: block; font-weight: 600; color: var(--green-primary); margin-bottom: 8px;">Adresse email</label>
-                <input id="email" name="email" type="email" required
-                    style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;"
-                    placeholder="Votre email" value="{{ old('email', $request->email) }}">
-            </div>
+            <form method="POST" action="{{ route('password.store') }}">
+                @csrf
+                <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-            <div>
-                <label for="password" style="display: block; font-weight: 600; color: var(--green-primary); margin-bottom: 8px;">Nouveau mot de passe</label>
-                <input id="password" name="password" type="password" required
-                    style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;"
-                    placeholder="Nouveau mot de passe">
-            </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" value="{{ old('email', $request->email) }}" required class="form-input" placeholder="votre@email.com" autofocus>
+                </div>
 
-            <div>
-                <label for="password_confirmation" style="display: block; font-weight: 600; color: var(--green-primary); margin-bottom: 8px;">Confirmer le mot de passe</label>
-                <input id="password_confirmation" name="password_confirmation" type="password" required
-                    style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;"
-                    placeholder="Confirmez le mot de passe">
-            </div>
+                <div class="form-group">
+                    <label class="form-label">Nouveau mot de passe</label>
+                    <input type="password" name="password" required class="form-input" placeholder="••••••••">
+                </div>
 
-            <button type="submit"
-                style="width: 100%; background: var(--primary-gradient); color: #0f172a; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; transition: all 0.3s ease; transform: translateY(0);" 
-                onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 12px 24px rgba(7, 214, 93, 0.3)';"
-                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-                Réinitialiser le mot de passe
-            </button>
-        </form>
+                <div class="form-group">
+                    <label class="form-label">Confirmer le mot de passe</label>
+                    <input type="password" name="password_confirmation" required class="form-input" placeholder="••••••••">
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    Réinitialiser →
+                </button>
+            </form>
+        </div>
+        
+        <div class="back-home">
+            <a href="{{ route('login') }}">← Retour à la connexion</a>
+        </div>
     </div>
 </body>
 </html>

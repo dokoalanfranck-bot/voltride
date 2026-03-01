@@ -1,107 +1,185 @@
 @extends('layouts.app')
 
+@section('title', 'Modifier ' . $scooter->name . ' - VoltRide Admin')
+
 @section('content')
-<style>
-    @keyframes slideIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .bg-white {
-        animation: slideIn 0.6s ease-out;
-    }
-    input:focus, textarea:focus, select:focus {
-        border-color: #07d65d !important;
-        box-shadow: 0 0 0 3px rgba(7, 214, 93, 0.2) !important;
-        outline: none;
-    }
-</style>
-<div class="max-w-2xl mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8">Edit Scooter</h1>
+<div class="container" style="padding-top: 40px; padding-bottom: 60px; max-width: 800px;">
+    <!-- Header -->
+    <div style="margin-bottom: 32px;">
+        <a href="{{ route('admin.scooters.index') }}" style="color: var(--gray); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 8px;">← Retour à la liste</a>
+        <h1 style="font-size: 2rem; font-weight: 800; letter-spacing: -1px;">
+            ✏️ Modifier <span style="color: var(--primary);">{{ $scooter->name }}</span>
+        </h1>
+    </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
-        <form action="{{ route('admin.scooters.update', $scooter) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
+    <!-- Error Messages -->
+    @if ($errors->any())
+        <div class="alert alert-danger" style="margin-bottom: 24px;">
+            <p style="font-weight: 700; margin-bottom: 8px;">Veuillez corriger les erreurs suivantes:</p>
+            @foreach ($errors->all() as $error)
+                <p style="margin: 4px 0;">• {{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
 
-            <div class="mb-4">
-                <label class="block text-sm font-semibold mb-2">Name *</label>
-                <input type="text" name="name" required value="{{ $scooter->name }}" class="w-full border rounded px-3 py-2">
+    <!-- Success Message -->
+    @if(session('success'))
+        <div class="alert alert-success" style="margin-bottom: 24px;">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <!-- Form -->
+    <form action="{{ route('admin.scooters.update', $scooter) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+
+        <!-- Current Images -->
+        @if($scooter->images->count() > 0)
+            <div class="card" style="margin-bottom: 24px;">
+                <div class="card-body">
+                    <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px;">📷 Images actuelles</h3>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        @foreach($scooter->images as $image)
+                            <div style="position: relative;">
+                                <img src="{{ asset('storage/' . $image->image_path) }}" alt="{{ $scooter->name }}" style="width: 100px; height: 100px; border-radius: 8px; object-fit: contain; background: var(--dark-lighter);">
+                                <button type="button" onclick="deleteImage({{ $image->id }})" style="position: absolute; top: -8px; right: -8px; width: 24px; height: 24px; border-radius: 50%; background: #ef4444; color: white; border: none; cursor: pointer; font-size: 0.8rem;">×</button>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>
+        @endif
 
-            <div class="mb-4">
-                <label class="block text-sm font-semibold mb-2">Description</label>
-                <textarea name="description" rows="4" class="w-full border rounded px-3 py-2">{{ $scooter->description }}</textarea>
-            </div>
+        <!-- Basic Info -->
+        <div class="card" style="margin-bottom: 24px;">
+            <div class="card-body">
+                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;">📝 Informations de base</h3>
 
-            <div class="grid md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-sm font-semibold mb-2">Price/Hour ($) *</label>
-                    <input type="number" name="price_hour" required step="0.01" value="{{ $scooter->price_hour }}">
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label class="form-label">Nom de la trottinette *</label>
+                    <input type="text" name="name" value="{{ old('name', $scooter->name) }}" required class="form-input" placeholder="Ex: Volt E-Pro 500">
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold mb-2">Price/Day ($) *</label>
-                    <input type="number" name="price_day" required step="0.01" value="{{ $scooter->price_day }}">
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" rows="4" class="form-input" placeholder="Description détaillée de la trottinette...">{{ old('description', $scooter->description) }}</textarea>
                 </div>
             </div>
+        </div>
 
-            <div class="grid md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-sm font-semibold mb-2">Battery Level (%)</label>
-                    <input type="number" name="battery_level" min="0" max="100" value="{{ $scooter->battery_level }}" class="w-full border rounded px-3 py-2">
+        <!-- Specs -->
+        <div class="card" style="margin-bottom: 24px;">
+            <div class="card-body">
+                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;">⚡ Caractéristiques</h3>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label class="form-label">Vitesse max (km/h) *</label>
+                        <input type="number" name="max_speed" value="{{ old('max_speed', $scooter->max_speed) }}" required class="form-input" min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Niveau de batterie (%)</label>
+                        <input type="number" name="battery_level" value="{{ old('battery_level', $scooter->battery_level) }}" class="form-input" min="0" max="100">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing -->
+        <div class="card" style="margin-bottom: 24px;">
+            <div class="card-body">
+                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;">💰 Tarification</h3>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label class="form-label">Prix par heure ($) *</label>
+                        <input type="number" name="price_hour" value="{{ old('price_hour', $scooter->price_hour) }}" required class="form-input" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Prix par jour ($)</label>
+                        <input type="number" name="price_day" value="{{ old('price_day', $scooter->price_day) }}" class="form-input" min="0" step="0.01">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location & Status -->
+        <div class="card" style="margin-bottom: 24px;">
+            <div class="card-body">
+                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;">📍 Localisation & Statut</h3>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label class="form-label">Localisation</label>
+                    <input type="text" name="location" value="{{ old('location', $scooter->location) }}" class="form-input" placeholder="Ex: Centre-ville, Station A">
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold mb-2">Status</label>
-                    <select name="status" class="w-full border rounded px-3 py-2">
-                        <option value="available" @selected($scooter->status === 'available')>Available</option>
-                        <option value="rented" @selected($scooter->status === 'rented')>Rented</option>
-                        <option value="maintenance" @selected($scooter->status === 'maintenance')>Maintenance</option>
+                <div class="form-group">
+                    <label class="form-label">Statut *</label>
+                    <select name="status" required class="form-input">
+                        <option value="available" {{ old('status', $scooter->status) == 'available' ? 'selected' : '' }}>✓ Disponible</option>
+                        <option value="rented" {{ old('status', $scooter->status) == 'rented' ? 'selected' : '' }}>📋 En location</option>
+                        <option value="maintenance" {{ old('status', $scooter->status) == 'maintenance' ? 'selected' : '' }}>🔧 En maintenance</option>
                     </select>
                 </div>
             </div>
+        </div>
 
-            <div class="grid md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-sm font-semibold mb-2">Max Speed (km/h)</label>
-                    <input type="number" name="max_speed" step="0.1" value="{{ $scooter->max_speed }}" class="w-full border rounded px-3 py-2">
+        <!-- New Images -->
+        <div class="card" style="margin-bottom: 24px;">
+            <div class="card-body">
+                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;">📷 Ajouter des images</h3>
+
+                <div class="form-group">
+                    <label class="form-label">Télécharger de nouvelles images</label>
+                    <input type="file" name="images[]" multiple accept="image/*" class="form-input" style="padding: 12px;">
+                    <p style="color: var(--gray); font-size: 0.85rem; margin-top: 8px;">Formats acceptés: JPG, PNG, GIF. Max 5MB par image.</p>
                 </div>
-
-                <div>
-                    <label class="block text-sm font-semibold mb-2">Location</label>
-                    <input type="text" name="location" value="{{ $scooter->location }}" class="w-full border rounded px-3 py-2">
-                </div>
             </div>
+        </div>
 
-            <div class="mb-6">
-                <label class="flex items-center">
-                    <input type="checkbox" name="is_active" value="1" @checked($scooter->is_active) class="rounded">
-                    <span class="ml-2">Active</span>
-                </label>
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-sm font-semibold mb-2">Images</label>
-                <div class="mb-2">
-                    @forelse($scooter->images as $image)
-                        <img src="{{ $image->getUrl() }}" alt="{{ $image->alt_text }}" style="width: 100px; height: 100px; object-fit: contain; border-radius: 4px; margin-right: 8px; margin-bottom: 8px; display: inline-block; background: #f9f9f9; padding: 5px;">
-                    @empty
-                        <p class="text-gray-500">No images yet</p>
-                    @endforelse
-                </div>
-                <input type="file" name="images[]" multiple accept="image/*" class="w-full border rounded px-3 py-2">
-                <p class="text-sm text-gray-600 mt-1">You can upload additional images</p>
-            </div>
-
-            <div class="flex gap-3">
-                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-                    Update Scooter
-                </button>
-                <a href="{{ route('admin.scooters.index') }}" class="bg-gray-400 text-white px-6 py-2 rounded hover:bg-gray-500">
-                    Cancel
-                </a>
-            </div>
-        </form>
-    </div>
+        <!-- Submit -->
+        <div style="display: flex; gap: 12px;">
+            <button type="submit" class="btn btn-primary btn-lg" style="flex: 1; justify-content: center;">
+                ✓ Sauvegarder les modifications
+            </button>
+            <a href="{{ route('admin.scooters.index') }}" class="btn btn-secondary btn-lg">
+                Annuler
+            </a>
+        </div>
+    </form>
 </div>
+
+<script>
+    function deleteImage(imageId) {
+        if (confirm('Êtes-vous sûr de vouloir supprimer cette image ?')) {
+            fetch('/admin/scooter-images/' + imageId, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Erreur lors de la suppression de l\'image.');
+                }
+            })
+            .catch(() => {
+                alert('Erreur lors de la suppression de l\'image.');
+            });
+        }
+    }
+</script>
+
+<style>
+    @media (max-width: 600px) {
+        .card-body > div[style*="grid-template-columns: 1fr 1fr"] {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
 @endsection

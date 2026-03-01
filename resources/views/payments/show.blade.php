@@ -1,216 +1,203 @@
 @extends('layouts.app')
 
-@section('title', 'Paiement - voltride')
+@section('title', 'Paiement - VoltRide')
 
 @section('content')
-<style>
-    @keyframes slideIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .card {
-        animation: slideIn 0.6s ease-out;
-    }
-    .card:first-of-type {
-        animation-delay: 0.1s;
-        opacity: 0;
-        animation-fill-mode: forwards;
-    }
-    .card:last-of-type {
-        animation-delay: 0.2s;
-        opacity: 0;
-        animation-fill-mode: forwards;
-    }
-</style>
-<div class="max-w-4xl mx-auto px-4 py-12">
-    <!-- En-tête -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+<div class="container" style="padding-top: 40px; padding-bottom: 60px; max-width: 1000px;">
+    <!-- Header -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; flex-wrap: wrap; gap: 16px;">
         <div>
-            <h1 style="color: #1f7550; font-size: 2.5rem; font-weight: 700; margin-bottom: 8px;">
-                💳 Paiement de la réservation
+            <a href="{{ route('reservations.show', $reservation) }}" style="color: var(--gray); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 12px;">
+                ← Retour à la réservation
+            </a>
+            <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -1px;">
+                💳 <span style="color: var(--primary);">Paiement</span>
             </h1>
-            <p style="color: #4a5568; font-size: 1rem;">
-                Réservation #{{ $reservation->id }}
-            </p>
+            <p style="color: var(--gray);">Réservation #{{ $reservation->id }}</p>
         </div>
-        <a href="{{ route('reservations.show', $reservation) }}" style="
-            display: inline-block;
-            background: #1f7550;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-        ">← Retour</a>
+        <span class="badge badge-warning">⏳ En attente de paiement</span>
     </div>
 
-    <!-- Messages d'erreur/succès -->
+    <!-- Error Messages -->
     @if ($errors->any())
-        <div style="background: #fee; border: 1px solid #fcc; color: #c33; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+        <div class="alert alert-danger" style="margin-bottom: 24px;">
             @foreach ($errors->all() as $error)
-                <p>{{ $error }}</p>
+                <p style="margin: 4px 0;">{{ $error }}</p>
             @endforeach
         </div>
     @endif
 
-    <!-- Contenu principal -->
+    <!-- Main Grid -->
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
-        <!-- Résumé de la réservation -->
-        <div class="card" style="padding: 32px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            <h2 style="color: #1f7550; font-size: 1.5rem; font-weight: 700; margin-bottom: 24px;">
-                📋 Résumé de la réservation
-            </h2>
+        <!-- Reservation Summary -->
+        <div class="card">
+            <div class="card-body">
+                <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 24px;">📋 Résumé de la réservation</h2>
 
-            <!-- Image trottinette -->
-            <img 
-                src="{{ $reservation->scooter?->images->first()?->getUrl() ?? 'https://via.placeholder.com/400x300?text=Trottinette' }}" 
-                alt="{{ $reservation->scooter?->name ?? 'Trottinette' }}" 
-                style="width: 100%; height: 200px; border-radius: 8px; object-fit: contain; background: #f9f9f9; padding: 15px; margin-bottom: 20px;">
-
-            <!-- Infos trottinette -->
-            <div style="margin-bottom: 20px;">
-                <p style="color: #999; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 4px;">Trottinette</p>
-                <p style="color: #333; font-size: 1.2rem; font-weight: 700;">
-                    {{ $reservation->scooter?->brand ?? 'Trottinette' }} {{ $reservation->scooter?->model ?? '' }}
-                </p>
-            </div>
-
-            <!-- Dates -->
-            <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0;">
-                <p style="color: #999; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 8px;">Période</p>
-                <p style="color: #333; font-weight: 600; margin-bottom: 4px;">
-                    Du {{ $reservation->start_time->format('d/m/Y') }} à {{ $reservation->start_time->format('H:i') }} 
-                    <br>
-                    Au {{ $reservation->end_time->format('d/m/Y') }} à {{ $reservation->end_time->format('H:i') }}
-                </p>
-            </div>
-
-            <!-- Tarification -->
-            <div style="margin-bottom: 20px;">
-                <p style="color: #999; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 12px; font-weight: 600;">Détail du prix</p>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <p style="color: #666;">Tarif horaire</p>
-                    <p style="color: #333; font-weight: 600;">{{ number_format($reservation->scooter?->price_hour ?? 0, 2) }} € / h</p>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <p style="color: #666;">Tarif journalier</p>
-                    <p style="color: #333; font-weight: 600;">{{ number_format($reservation->scooter?->price_day ?? 0, 2) }} € / jour</p>
-                </div>
-
-                @if ($reservation->delay_minutes > 0)
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 8px; background: #fff3cd; border-radius: 6px;">
-                        <p style="color: #856404;">Frais de retard ({{ $reservation->delay_minutes }} min)</p>
-                        <p style="color: #856404; font-weight: 600;">{{ number_format($reservation->delay_fee, 2) }} €</p>
-                    </div>
+                <!-- Scooter Image -->
+                @if($reservation->scooter?->images->count() > 0)
+                    <img src="{{ asset('storage/' . $reservation->scooter->images->first()->image_path) }}" alt="{{ $reservation->scooter->name }}" style="width: 100%; height: 180px; border-radius: 12px; object-fit: contain; background: var(--dark-lighter); margin-bottom: 20px;">
+                @else
+                    <div style="width: 100%; height: 180px; border-radius: 12px; background: var(--dark-lighter); display: flex; align-items: center; justify-content: center; font-size: 4rem; opacity: 0.3; margin-bottom: 20px;">🛴</div>
                 @endif
-            </div>
 
-            <!-- Total -->
-            <div style="background: linear-gradient(135deg, #1f7550 0%, #2d9b6f 100%); color: white; padding: 20px; border-radius: 8px; text-align: center;">
-                <p style="color: rgba(255,255,255,0.8); font-size: 0.9rem; margin-bottom: 8px;">MONTANT TOTAL À PAYER</p>
-                <p style="font-size: 2.5rem; font-weight: 800;">{{ number_format($reservation->total_price, 2) }} €</p>
+                <!-- Scooter Info -->
+                <div style="margin-bottom: 20px;">
+                    <p style="color: var(--gray); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 4px;">Trottinette</p>
+                    <p style="font-size: 1.2rem; font-weight: 700; color: var(--primary);">
+                        {{ $reservation->scooter?->name ?? 'Trottinette' }}
+                    </p>
+                </div>
+
+                <!-- Dates -->
+                <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <p style="color: var(--gray); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 8px;">Période</p>
+                    <p style="font-weight: 600;">
+                        Du {{ $reservation->start_time->format('d/m/Y H:i') }}<br>
+                        Au {{ $reservation->end_time->format('d/m/Y H:i') }}
+                    </p>
+                </div>
+
+                <!-- Pricing -->
+                <div style="margin-bottom: 20px;">
+                    <p style="color: var(--gray); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 12px;">Détail du prix</p>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--gray);">Tarif horaire</span>
+                        <span style="font-weight: 600;">{{ number_format($reservation->scooter?->price_hour ?? 0, 2) }} $ / h</span>
+                    </div>
+
+                    @php
+                        $totalMinutes = $reservation->start_time->diffInMinutes($reservation->end_time);
+                        $hours = intval($totalMinutes / 60);
+                        $minutes = $totalMinutes % 60;
+                    @endphp
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--gray);">Durée</span>
+                        <span style="font-weight: 600;">{{ $hours > 0 ? $hours . 'h ' : '' }}{{ $minutes > 0 ? $minutes . 'min' : '' }}</span>
+                    </div>
+
+                    @if (isset($reservation->delay_minutes) && $reservation->delay_minutes > 0)
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; padding: 12px; background: rgba(245, 158, 11, 0.2); border-radius: 8px; margin-top: 12px;">
+                            <span style="color: #f59e0b;">Frais de retard ({{ $reservation->delay_minutes }} min)</span>
+                            <span style="color: #f59e0b; font-weight: 600;">{{ number_format($reservation->delay_fee ?? 0, 2) }} $</span>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Total -->
+                <div style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: var(--dark); padding: 24px; border-radius: 12px; text-align: center;">
+                    <p style="font-size: 0.9rem; margin-bottom: 8px; opacity: 0.8;">MONTANT TOTAL À PAYER</p>
+                    <p style="font-size: 2.5rem; font-weight: 800;">{{ number_format($reservation->total_price, 2) }} $</p>
+                </div>
             </div>
         </div>
 
-        <!-- Formulaire de paiement -->
-        <div class="card" style="padding: 32px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            <h2 style="color: #1f7550; font-size: 1.5rem; font-weight: 700; margin-bottom: 24px;">
-                💰 Informations de paiement
-            </h2>
+        <!-- Payment Form -->
+        <div class="card">
+            <div class="card-body">
+                <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 24px;">💰 Informations de paiement</h2>
 
-            <form id="payment-form" method="POST" action="{{ route('payments.store', $reservation) }}" style="display: none;">
-                @csrf
-                <input type="hidden" name="stripeToken" id="stripeToken">
-            </form>
+                <form id="payment-form" method="POST" action="{{ route('payments.store', $reservation) }}" style="display: none;">
+                    @csrf
+                    <input type="hidden" name="stripeToken" id="stripeToken">
+                </form>
 
-            <!-- Stripe Payment Element -->
-            <div id="payment-element" style="margin-bottom: 24px; min-height: 300px; padding: 20px; background: #f5f5f5; border-radius: 8px; border: 1px solid #ddd;">
-                <p style="color: #666; text-align: center;">
-                    ⚠️ Les détails de paiement Stripe apparaîtront ici avec une clé de test valide
-                </p>
-            </div>
-
-            <!-- Bouton de paiement -->
-            <button type="button" id="payment-button" onclick="submitPayment()" style="
-                width: 100%;
-                background: linear-gradient(135deg, #1f7550 0%, #2d9b6f 100%);
-                color: white;
-                padding: 16px;
-                border-radius: 8px;
-                border: none;
-                font-weight: 700;
-                font-size: 1.1rem;
-                cursor: pointer;
-                transition: opacity 0.3s;
-                margin-bottom: 16px;
-            ">
-                🔒 Payer {{ number_format($reservation->total_price, 2) }} €
-            </button>
-
-            <!-- Lien de retour -->
-            <a href="{{ route('reservations.show', $reservation) }}" style="
-                display: block;
-                text-align: center;
-                color: #1f7550;
-                text-decoration: none;
-                font-weight: 600;
-                padding: 12px;
-            ">
-                ← Annuler et retourner
-            </a>
-
-            <!-- Infos de sécurité -->
-            <div style="background: #f5f5f5; padding: 16px; border-radius: 8px; margin-top: 24px;">
-                <p style="color: #999; font-size: 0.85rem; margin-bottom: 8px;">
-                    🔒 <strong>Sécurisé par Stripe</strong>
-                </p>
-                <p style="color: #666; font-size: 0.9rem;">
-                    Vos informations de paiement sont traitées de manière sécurisée par Stripe, un leader en matière de paiements en ligne. Nous ne stockons jamais les détails de votre carte.
-                </p>
-            </div>
-
-            <!-- Infos test -->
-            @if (app()->isLocal())
-                <div style="background: #e7e7ff; padding: 16px; border-radius: 8px; margin-top: 16px; border: 1px solid #b3b3ff;">
-                    <p style="color: #3f3fcc; font-size: 0.85rem; margin-bottom: 8px;">
-                        🧪 <strong>Mode Test Stripe</strong>
-                    </p>
-                    <p style="color: #3f3fcc; font-size: 0.9rem; margin-bottom: 8px;">
-                        Utilisez les numéros de carte de test Stripe:
-                    </p>
-                    <ul style="color: #3f3fcc; font-size: 0.9rem; margin: 0; padding-left: 20px;">
-                        <li>Succès: 4242 4242 4242 4242</li>
-                        <li>Déclinaison: 4000 0000 0000 0002</li>
-                        <li>Expiration: 12/34 | CVC: 567</li>
-                    </ul>
+                <!-- Payment Method Selection -->
+                <div style="margin-bottom: 24px;">
+                    <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 16px;">Choisissez votre méthode de paiement</p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+                        <label class="card" style="padding: 20px; cursor: pointer; text-align: center; transition: all 0.3s; border: 2px solid var(--primary);" id="card-option">
+                            <input type="radio" name="payment_method" value="card" checked style="display: none;">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">💳</div>
+                            <div style="font-weight: 700; color: var(--primary);">Carte</div>
+                        </label>
+                        <label class="card" style="padding: 20px; cursor: pointer; text-align: center; transition: all 0.3s; border: 2px solid transparent;" id="cash-option">
+                            <input type="radio" name="payment_method" value="cash" style="display: none;">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">💵</div>
+                            <div style="font-weight: 700;">Espèces</div>
+                        </label>
+                    </div>
                 </div>
-            @endif
+
+                <!-- Stripe Payment Element -->
+                <div id="payment-element" style="margin-bottom: 24px; min-height: 200px; padding: 24px; background: var(--dark-lighter); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                    <div style="text-align: center; color: var(--gray);">
+                        <p style="font-size: 0.9rem;">⚠️ L'élément de paiement Stripe apparaîtra ici</p>
+                        <p style="font-size: 0.8rem; margin-top: 8px;">Entrez les détails de votre carte pour procéder au paiement</p>
+                    </div>
+                </div>
+
+                <!-- Pay Button -->
+                <button type="button" id="payment-button" onclick="submitPayment()" class="btn btn-primary btn-lg" style="width: 100%; justify-content: center; margin-bottom: 16px;">
+                    🔒 Payer {{ number_format($reservation->total_price, 2) }} $
+                </button>
+
+                <!-- Security Info -->
+                <div style="text-align: center; padding: 16px; background: var(--dark-lighter); border-radius: 8px;">
+                    <p style="color: var(--gray); font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <span>🔐</span> Paiement sécurisé par Stripe
+                    </p>
+                </div>
+
+                <!-- Alternative: Pay on site -->
+                <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <p style="color: var(--gray); font-size: 0.9rem; text-align: center; margin-bottom: 16px;">
+                        Ou payez directement sur place
+                    </p>
+                    <form action="{{ route('reservations.show', $reservation) }}" method="GET">
+                        <button type="submit" class="btn btn-secondary" style="width: 100%;">
+                            💵 Payer sur place
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<style>
+    @media (max-width: 768px) {
+        .container > div:last-child {
+            grid-template-columns: 1fr !important;
+        }
+    }
+    
+    #card-option:has(input:checked),
+    #cash-option:has(input:checked) {
+        border-color: var(--primary) !important;
+        background: rgba(0, 255, 106, 0.1) !important;
+    }
+</style>
+
 <script>
-// Mock payment function for demonstration
-function submitPayment() {
-    const button = document.getElementById('payment-button');
-    button.disabled = true;
-    button.textContent = 'Traitement en cours...';
-
-    // In a real implementation, you would:
-    // 1. Initialize Stripe with the public key
-    // 2. Create a payment method
-    // 3. Confirm the payment
-    // 4. Submit the form
-
-    // For now, we'll show a demo message
-    setTimeout(() => {
-        alert('Démonstration: Dans un environnement réel, cliquez sur "Payer" créerait une transaction Stripe.\n\nAssurez-vous de configurer les clés Stripe valides dans votre fichier .env');
-        button.disabled = false;
-        button.textContent = '🔒 Payer {{ number_format($reservation->total_price, 2) }} €';
-    }, 2000);
-}
+    function submitPayment() {
+        // Placeholder for Stripe payment logic
+        const form = document.getElementById('payment-form');
+        const button = document.getElementById('payment-button');
+        
+        button.disabled = true;
+        button.innerHTML = '⏳ Traitement en cours...';
+        
+        // In a real implementation, this would integrate with Stripe
+        setTimeout(() => {
+            alert('Le paiement Stripe nécessite une configuration complète. Veuillez contacter l\'administrateur.');
+            button.disabled = false;
+            button.innerHTML = '🔒 Payer {{ number_format($reservation->total_price, 2) }} $';
+        }, 1000);
+    }
+    
+    // Payment method selection
+    document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const paymentElement = document.getElementById('payment-element');
+            if (this.value === 'cash') {
+                paymentElement.style.display = 'none';
+            } else {
+                paymentElement.style.display = 'block';
+            }
+        });
+    });
 </script>
-
 @endsection
