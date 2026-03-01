@@ -169,7 +169,6 @@
                     @if($reservation->status === 'pending')
                         <form action="{{ route('reservations.cancel', $reservation) }}" method="POST" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')">
                             @csrf
-                            @method('PUT')
                             <button type="submit" class="btn btn-danger">
                                 ✗ Annuler la réservation
                             </button>
