@@ -115,14 +115,14 @@ class ReservationController extends Controller
             // Send email to client
             $clientEmail = $validated['guest_email'] ?? auth()?->user()?->email;
             if ($clientEmail) {
-                Mail::to($clientEmail)->send(new ReservationConfirmationClient($reservation));
+                Mail::to($clientEmail)->queue(new ReservationConfirmationClient($reservation));
             }
 
             // Send notification email to admin
             $adminEmails = User::where('role', 'admin')->pluck('email')->toArray();
             if (!empty($adminEmails)) {
                 foreach ($adminEmails as $adminEmail) {
-                    Mail::to($adminEmail)->send(new ReservationNotificationAdmin($reservation));
+                    Mail::to($adminEmail)->queue(new ReservationNotificationAdmin($reservation));
                 }
             }
         } catch (\Exception $e) {

@@ -10,7 +10,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ReservationConfirmationClient extends Mailable
+class ReservationConfirmationClient extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
