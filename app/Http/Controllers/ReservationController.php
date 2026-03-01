@@ -118,11 +118,20 @@ class ReservationController extends Controller
                 Mail::to($clientEmail)->queue(new ReservationConfirmationClient($reservation));
             }
 
-            // Send notification email to admin
+            // Send notification email to admin(s).
+            // Prefer admin users from DB, but fall back to ADMIN_EMAILS env var or MAIL_FROM_ADDRESS.
             $adminEmails = User::where('role', 'admin')->pluck('email')->toArray();
-            if (!empty($adminEmails)) {
-                foreach ($adminEmails as $adminEmail) {
-                    Mail::to($adminEmail)->queue(new ReservationNotificationAdmin($reservation));
+            $envAdminList = env('ADMIN_EMAILS', env('MAIL_FROM_ADDRESS')) ?: '';
+            $envAdmins = array_filter(array_map('trim', explode(',', $envAdminList)));
+            $allAdminEmails = array_values(array_unique(array_merge($adminEmails, $envAdmins)));
+
+            if (!empty($allAdminEmails)) {
+                foreach ($allAdminEmails as $adminEmail) {
+                    try {
+                        Mail::to($adminEmail)->queue(new ReservationNotificationAdmin($reservation));
+                    } catch (\Exception $e) {
+                        \Log::error("Erreur en envoyant la notification admin à {$adminEmail}: " . $e->getMessage());
+                    }
                 }
             }
         } catch (\Exception $e) {
