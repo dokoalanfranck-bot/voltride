@@ -268,9 +268,10 @@
 
         .card-image {
             width: 100%;
-            height: 200px;
-            object-fit: cover;
+            height: 220px;
+            object-fit: contain;
             background: var(--dark-lighter);
+            display: block;
         }
 
         /* Forms */
