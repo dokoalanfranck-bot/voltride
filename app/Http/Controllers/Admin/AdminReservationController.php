@@ -73,6 +73,26 @@ class AdminReservationController extends Controller
         return view('admin.reservations.show', compact('reservation', 'payment'));
     }
 
+    /**
+     * Update reservation status (admin)
+     */
+    public function update(Request $request, Reservation $reservation): RedirectResponse
+    {
+        $data = $request->validate([
+            'status' => 'required|in:pending,active,completed,cancelled',
+        ]);
+
+        $status = $data['status'];
+
+        if ($status === 'completed') {
+            $reservation->markAsCompleted();
+        } else {
+            $reservation->update(['status' => $status]);
+        }
+
+        return redirect()->back()->with('success', 'Statut de la réservation mis à jour.');
+    }
+
     public function markCompleted(Reservation $reservation): RedirectResponse
     {
         $reservation->markAsCompleted();

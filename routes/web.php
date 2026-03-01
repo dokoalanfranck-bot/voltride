@@ -64,6 +64,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Reservation Management
     Route::get('/reservations', [AdminReservationController::class, 'index'])->name('admin.reservations.index');
     Route::get('/reservations/{reservation}', [AdminReservationController::class, 'show'])->name('admin.reservations.show');
+    Route::put('/reservations/{reservation}', [AdminReservationController::class, 'update'])->name('admin.reservations.update');
     Route::post('/reservations/{reservation}/complete', [AdminReservationController::class, 'markCompleted'])->name('admin.reservations.complete');
     Route::post('/payments/{payment}/refund', [PaymentController::class, 'refund'])->name('admin.payments.refund');
     Route::post('/reservations/{reservation}/validate-payment', [AdminReservationController::class, 'validatePayment'])->name('admin.reservations.validatePayment');
