@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vérifier l'email - VoltRide</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
             --primary: #00FF6A;
@@ -169,7 +170,7 @@
 <body>
     <div class="container">
         <div class="card">
-            <div class="logo-icon">✉️</div>
+            <div class="logo-icon"><i class="fa-solid fa-envelope"></i></div>
             <h1 class="title">Vérifiez votre email</h1>
             <p class="description">
                 Merci pour votre inscription ! Avant de commencer, veuillez vérifier votre adresse email en cliquant sur le lien que nous venons de vous envoyer.

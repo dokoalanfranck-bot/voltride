@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ VoltRide - La mobilité électrique réinventée</title>
+    <title>VoltRide - La mobilité électrique réinventée</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -633,11 +634,11 @@
                 <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Déconnexion</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
             @else
-                <a href="{{ route('login') }}">Connexion</a>
+                {{-- Login hidden from public --}}
             @endauth
         </div>
         <button class="theme-toggle" onclick="toggleTheme()" title="Changer de thème">
-            <span id="theme-icon">🌙</span>
+            <span id="theme-icon"><i class="fa-solid fa-moon"></i></span>
         </button>
     </nav>
 
@@ -650,7 +651,7 @@
         
         <div class="hero-content">
             <div class="hero-badge">
-                <span>⚡</span>
+                <span><i class="fa-solid fa-bolt"></i></span>
                 <span>Disponible maintenant dans votre ville</span>
             </div>
             <h1 class="hero-title">
@@ -663,7 +664,7 @@
             </p>
             <div class="hero-cta">
                 <a href="{{ route('scooters.index') }}" class="btn btn-primary">
-                    🚀 Réserver maintenant
+                    <i class="fa-solid fa-arrow-right"></i> Réserver maintenant
                 </a>
                 <a href="#how" class="btn btn-outline">
                     Comment ça marche
@@ -682,32 +683,32 @@
         
         <div class="features-grid">
             <div class="feature-card animate-on-scroll">
-                <div class="feature-icon">⚡</div>
+                <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
                 <h3>Réservation instantanée</h3>
                 <p>Choisissez votre trottinette et réservez en moins de 2 minutes. Aucun compte requis, juste vos coordonnées.</p>
             </div>
             <div class="feature-card animate-on-scroll">
-                <div class="feature-icon">🔋</div>
+                <div class="feature-icon"><i class="fa-solid fa-battery-full"></i></div>
                 <h3>Toujours chargée</h3>
                 <p>Nos trottinettes sont contrôlées et rechargées après chaque location. Batterie pleine garantie.</p>
             </div>
             <div class="feature-card animate-on-scroll">
-                <div class="feature-icon">💰</div>
+                <div class="feature-icon"><i class="fa-solid fa-euro-sign"></i></div>
                 <h3>Prix transparents</h3>
                 <p>Pas de frais cachés, pas de surprise. Vous payez exactement ce que vous voyez, rien de plus.</p>
             </div>
             <div class="feature-card animate-on-scroll">
-                <div class="feature-icon">🛡️</div>
+                <div class="feature-icon"><i class="fa-solid fa-shield-alt"></i></div>
                 <h3>Assurance incluse</h3>
                 <p>Roulez l'esprit tranquille. Chaque location inclut une assurance responsabilité civile complète.</p>
             </div>
             <div class="feature-card animate-on-scroll">
-                <div class="feature-icon">🌍</div>
+                <div class="feature-icon"><i class="fa-solid fa-globe"></i></div>
                 <h3>Éco-responsable</h3>
                 <p>Zéro émission, zéro bruit. Participez à la mobilité durable et réduisez votre empreinte carbone.</p>
             </div>
             <div class="feature-card animate-on-scroll">
-                <div class="feature-icon">📞</div>
+                <div class="feature-icon"><i class="fa-solid fa-headset"></i></div>
                 <h3>Support 7j/7</h3>
                 <p>Une question, un problème ? Notre équipe est disponible tous les jours pour vous assister.</p>
             </div>
@@ -749,7 +750,7 @@
                 Rejoignez des milliers d'utilisateurs qui ont déjà adopté une mobilité plus libre, plus verte et plus fun.
             </p>
             <a href="{{ route('scooters.index') }}" class="btn btn-primary" style="font-size: 1.1rem; padding: 18px 36px;">
-                🛴 Voir les trottinettes disponibles
+                <i class="fa-solid fa-motorcycle"></i> Voir les trottinettes disponibles
             </a>
         </div>
     </section>
@@ -766,7 +767,7 @@
                 <a href="#features">Avantages</a>
                 <a href="#how">Comment ça marche</a>
                 @guest
-                    <a href="{{ route('login') }}">Connexion</a>
+                    {{-- Login hidden from public --}}
                 @endguest
             </div>
             <div class="footer-copy">
@@ -792,7 +793,7 @@
                 function updateThemeIcon(theme) {
                     const icon = document.getElementById('theme-icon');
                     if (icon) {
-                        icon.textContent = theme === 'dark' ? '🌙' : '☀️';
+                        icon.innerHTML = theme === 'dark' ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
                     }
                 }
                 // Initialize theme on page load

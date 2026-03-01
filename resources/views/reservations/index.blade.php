@@ -7,7 +7,7 @@
     <!-- Header -->
     <div style="margin-bottom: 40px;">
         <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -1px;">
-            📅 Mes <span style="color: var(--primary);">réservations</span>
+            <i class="fa-solid fa-calendar-check"></i> Mes <span style="color: var(--primary);">réservations</span>
         </h1>
         <p style="color: var(--gray); font-size: 1.1rem;">
             Suivez et gérez toutes vos locations de trottinettes
@@ -52,7 +52,7 @@
                         @if($reservation->scooter?->images->count() > 0)
                             <img src="{{ asset('storage/' . $reservation->scooter->images->first()->image_path) }}" alt="{{ $reservation->scooter->name }}" style="width: 100px; height: 100px; border-radius: 12px; object-fit: contain; background: var(--dark-lighter);">
                         @else
-                            <div style="width: 100px; height: 100px; border-radius: 12px; background: var(--dark-lighter); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; opacity: 0.5;">🛴</div>
+                            <div style="width: 100px; height: 100px; border-radius: 12px; background: var(--dark-lighter); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; opacity: 0.5;"><i class="fa-solid fa-motorcycle"></i></div>
                         @endif
 
                         <!-- Reservation Details -->
@@ -61,7 +61,7 @@
                                 {{ $reservation->scooter?->name ?? 'Trottinette supprimée' }}
                             </h3>
                             <p style="color: var(--gray); margin-bottom: 12px;">
-                                📍 {{ $reservation->scooter?->location ?? 'Localisation non disponible' }}
+                                <i class="fa-solid fa-map-marker-alt"></i> {{ $reservation->scooter?->location ?? 'Localisation non disponible' }}
                             </p>
                             
                             <div style="display: flex; gap: 32px; margin-bottom: 12px; flex-wrap: wrap;">
@@ -81,13 +81,13 @@
 
                             <!-- Status -->
                             @if($reservation->status === 'active')
-                                <span class="badge badge-info">✓ En cours</span>
+                                <span class="badge badge-info"><i class="fa-solid fa-play-circle"></i> En cours</span>
                             @elseif($reservation->status === 'completed')
-                                <span class="badge badge-success">✓ Complétée</span>
+                                <span class="badge badge-success"><i class="fa-solid fa-check-circle"></i> Complétée</span>
                             @elseif($reservation->status === 'cancelled')
                                 <span class="badge badge-danger">✗ Annulée</span>
                             @else
-                                <span class="badge badge-warning">⏳ En attente</span>
+                                <span class="badge badge-warning"><i class="fa-solid fa-hourglass-half"></i> En attente</span>
                             @endif
                         </div>
 
@@ -116,13 +116,13 @@
         <!-- Empty State -->
         <div class="card" style="text-align: center;">
             <div class="card-body" style="padding: 60px 20px;">
-                <div style="font-size: 4rem; margin-bottom: 24px; opacity: 0.5;">🛴</div>
+                <div style="font-size: 4rem; margin-bottom: 24px; opacity: 0.5;"><i class="fa-solid fa-motorcycle"></i></div>
                 <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 12px;">Aucune réservation</h3>
                 <p style="color: var(--gray); margin-bottom: 24px; max-width: 400px; margin-left: auto; margin-right: auto;">
                     Vous n'avez pas encore effectué de réservation. Explorez notre flotte et réservez votre première trottinette !
                 </p>
                 <a href="{{ route('scooters.index') }}" class="btn btn-primary btn-lg">
-                    🚀 Découvrir nos trottinettes
+                    <i class="fa-solid fa-arrow-right"></i> Découvrir nos trottinettes
                 </a>
             </div>
         </div>

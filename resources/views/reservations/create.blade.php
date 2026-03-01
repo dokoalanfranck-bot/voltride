@@ -6,7 +6,7 @@
 <div class="container" style="padding-top: 40px; padding-bottom: 60px;">
     <!-- Header -->
     <div style="margin-bottom: 40px; text-align: center;">
-        <span class="badge badge-success" style="margin-bottom: 16px;">⚡ Réservation rapide</span>
+        <span class="badge badge-success" style="margin-bottom: 16px;"><i class="fa-solid fa-bolt"></i> Réservation rapide</span>
         <h1 style="font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 800; margin-bottom: 12px; letter-spacing: -1px;">
             Réserver <span style="color: var(--primary);">{{ $scooter->name }}</span>
         </h1>
@@ -29,14 +29,14 @@
                     @if($scooter->images->count() > 0)
                         <img src="{{ asset('storage/' . $scooter->images->first()->image_path) }}" alt="{{ $scooter->name }}" style="width: 100px; height: 100px; border-radius: 12px; object-fit: contain; background: var(--dark-lighter);">
                     @else
-                        <div style="width: 100px; height: 100px; border-radius: 12px; background: var(--dark-lighter); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; opacity: 0.5;">🛴</div>
+                        <div style="width: 100px; height: 100px; border-radius: 12px; background: var(--dark-lighter); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; opacity: 0.5;"><i class="fa-solid fa-motorcycle"></i></div>
                     @endif
                     <div style="flex: 1;">
                         <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; color: var(--primary);">{{ $scooter->name }}</h3>
                         <p style="color: var(--gray); margin-bottom: 8px; line-height: 1.5;">{{ Str::limit($scooter->description, 100) }}</p>
                         <div style="display: flex; gap: 16px; font-size: 0.9rem;">
-                            <span>🔋 {{ $scooter->battery_level ?? 100 }}%</span>
-                            <span>⚡ {{ $scooter->max_speed }} km/h</span>
+                            <span><i class="fa-solid fa-battery-full"></i> {{ $scooter->battery_level ?? 100 }}%</span>
+                            <span><i class="fa-solid fa-bolt"></i> {{ $scooter->max_speed }} km/h</span>
                         </div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
             <div class="card" style="margin-bottom: 24px;">
                 <div class="card-body">
                     <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 1.3rem;">📅</span> Quand?
+                        <span style="font-size: 1.3rem;"><i class="fa-solid fa-calendar-alt"></i></span> Quand?
                     </h3>
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
@@ -68,7 +68,7 @@
             <div class="card" style="margin-bottom: 24px;">
                 <div class="card-body">
                     <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 1.3rem;">⏱️</span> Durée
+                        <span style="font-size: 1.3rem;"><i class="fa-solid fa-clock"></i></span> Durée
                     </h3>
                     
                     <div style="margin-bottom: 20px;">
@@ -86,7 +86,7 @@
                     <div id="duration-display" style="font-size: 2rem; font-weight: 800; color: var(--primary); text-align: center; margin-bottom: 16px;">30 min</div>
 
                     <div class="alert alert-warning" style="display: flex; gap: 12px; align-items: flex-start;">
-                        <span style="font-size: 1.2rem;">ℹ️</span>
+                        <span style="font-size: 1.2rem;"><i class="fa-solid fa-info-circle"></i></span>
                         <span>Seuls les touristes peuvent réserver pour 2 heures maximum.</span>
                     </div>
 
@@ -98,19 +98,19 @@
             <div class="card" style="margin-bottom: 24px;">
                 <div class="card-body">
                     <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 1.3rem;">🌍</span> Vous êtes?
+                        <span style="font-size: 1.3rem;"><i class="fa-solid fa-globe"></i></span> Vous êtes?
                     </h3>
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                         <label class="card" style="padding: 20px; cursor: pointer; text-align: center; transition: all 0.3s; border: 2px solid transparent;" id="local-option">
                             <input type="radio" name="is_tourist" value="0" {{ old('is_tourist', 0) == 0 ? 'checked' : '' }} style="display: none;">
-                            <div style="font-size: 2rem; margin-bottom: 8px;">👤</div>
+                            <div style="font-size: 2rem; margin-bottom: 8px;"><i class="fa-solid fa-user"></i></div>
                             <div style="font-weight: 700; color: var(--primary);">Local</div>
                             <p style="color: var(--gray); font-size: 0.85rem; margin-top: 4px;">Max 1h</p>
                         </label>
                         <label class="card" style="padding: 20px; cursor: pointer; text-align: center; transition: all 0.3s; border: 2px solid transparent;" id="tourist-option">
                             <input type="radio" name="is_tourist" value="1" {{ old('is_tourist') == 1 ? 'checked' : '' }} style="display: none;">
-                            <div style="font-size: 2rem; margin-bottom: 8px;">✈️</div>
+                            <div style="font-size: 2rem; margin-bottom: 8px;"><i class="fa-solid fa-plane"></i></div>
                             <div style="font-weight: 700; color: var(--primary);">Touriste</div>
                             <p style="color: var(--gray); font-size: 0.85rem; margin-top: 4px;">Jusqu'à 2h</p>
                         </label>
@@ -122,7 +122,7 @@
             <div class="card" style="margin-bottom: 24px;">
                 <div class="card-body">
                     <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 1.3rem;">👤</span> Vos informations
+                        <span style="font-size: 1.3rem;"><i class="fa-solid fa-user"></i></span> Vos informations
                     </h3>
                     
                     <div class="form-group" style="margin-bottom: 16px;">
@@ -160,7 +160,7 @@
 
             <!-- Submit Button -->
             <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; justify-content: center;">
-                ✓ Finaliser la réservation
+                <i class="fa-solid fa-check"></i> Finaliser la réservation
             </button>
         </form>
 
@@ -169,7 +169,7 @@
             <div class="card">
                 <div class="card-body">
                     <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 1.3rem;">💰</span> Tarifs
+                        <span style="font-size: 1.3rem;"><i class="fa-solid fa-euro-sign"></i></span> Tarifs
                     </h3>
                     
                     <div style="margin-bottom: 24px;">
@@ -190,7 +190,7 @@
                     </div>
 
                     <div style="background: rgba(0, 255, 106, 0.1); border-left: 3px solid var(--primary); padding: 16px; border-radius: 0 8px 8px 0;">
-                        <p style="color: var(--primary); font-weight: 600; margin-bottom: 8px;">💡 Info</p>
+                        <p style="color: var(--primary); font-weight: 600; margin-bottom: 8px;"><i class="fa-solid fa-info-circle"></i> Info</p>
                         <p style="color: var(--gray); font-size: 0.9rem; margin: 0;">Paiement sur place en espèces ou par carte</p>
                     </div>
                 </div>
@@ -199,7 +199,7 @@
             <!-- Promo Code -->
             <div class="card" style="margin-top: 16px;">
                 <div class="card-body">
-                    <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 12px;">🎟️ Code promo</h3>
+                    <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 12px;"><i class="fa-solid fa-ticket"></i> Code promo</h3>
                     <div style="display: flex; gap: 8px;">
                         <input type="text" name="promo_code" class="form-input" placeholder="VOLTRIDE10" style="flex: 1;">
                         <button type="button" class="btn btn-secondary">Appliquer</button>

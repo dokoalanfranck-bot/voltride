@@ -8,7 +8,7 @@
     <div style="margin-bottom: 32px;">
         <a href="{{ route('admin.scooters.index') }}" style="color: var(--gray); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 8px;">← Retour à la liste</a>
         <h1 style="font-size: 2rem; font-weight: 800; letter-spacing: -1px;">
-            ✏️ Modifier <span style="color: var(--primary);">{{ $scooter->name }}</span>
+            Modifier <span style="color: var(--primary);">{{ $scooter->name }}</span>
         </h1>
     </div>
 
@@ -71,7 +71,7 @@
         <!-- Specs -->
         <div class="card" style="margin-bottom: 24px;">
             <div class="card-body">
-                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;">⚡ Caractéristiques</h3>
+                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;">Caractéristiques</h3>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                     <div class="form-group">
@@ -89,7 +89,7 @@
         <!-- Pricing -->
         <div class="card" style="margin-bottom: 24px;">
             <div class="card-body">
-                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;">💰 Tarification</h3>
+                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;">Tarification</h3>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                     <div class="form-group">
@@ -107,7 +107,7 @@
         <!-- Location & Status -->
         <div class="card" style="margin-bottom: 24px;">
             <div class="card-body">
-                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;">📍 Localisation & Statut</h3>
+                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;">Localisation & Statut</h3>
 
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label class="form-label">Localisation</label>
@@ -117,9 +117,9 @@
                 <div class="form-group">
                     <label class="form-label">Statut *</label>
                     <select name="status" required class="form-input">
-                        <option value="available" {{ old('status', $scooter->status) == 'available' ? 'selected' : '' }}>✓ Disponible</option>
-                        <option value="rented" {{ old('status', $scooter->status) == 'rented' ? 'selected' : '' }}>📋 En location</option>
-                        <option value="maintenance" {{ old('status', $scooter->status) == 'maintenance' ? 'selected' : '' }}>🔧 En maintenance</option>
+                        <option value="available" {{ old('status', $scooter->status) == 'available' ? 'selected' : '' }}>Disponible</option>
+                        <option value="rented" {{ old('status', $scooter->status) == 'rented' ? 'selected' : '' }}>En location</option>
+                        <option value="maintenance" {{ old('status', $scooter->status) == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
                     </select>
                 </div>
             </div>
@@ -141,7 +141,7 @@
         <!-- Submit -->
         <div style="display: flex; gap: 12px;">
             <button type="submit" class="btn btn-primary btn-lg" style="flex: 1; justify-content: center;">
-                ✓ Sauvegarder les modifications
+                Sauvegarder les modifications
             </button>
             <a href="{{ route('admin.scooters.index') }}" class="btn btn-secondary btn-lg">
                 Annuler

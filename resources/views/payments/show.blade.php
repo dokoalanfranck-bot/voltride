@@ -11,11 +11,11 @@
                 ← Retour à la réservation
             </a>
             <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -1px;">
-                💳 <span style="color: var(--primary);">Paiement</span>
+                <i class="fa-solid fa-credit-card"></i> <span style="color: var(--primary);">Paiement</span>
             </h1>
             <p style="color: var(--gray);">Réservation #{{ $reservation->id }}</p>
         </div>
-        <span class="badge badge-warning">⏳ En attente de paiement</span>
+        <span class="badge badge-warning"><i class="fa-solid fa-hourglass-half"></i> En attente de paiement</span>
     </div>
 
     <!-- Error Messages -->
@@ -32,13 +32,13 @@
         <!-- Reservation Summary -->
         <div class="card">
             <div class="card-body">
-                <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 24px;">📋 Résumé de la réservation</h2>
+                <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 24px;"><i class="fa-solid fa-file-alt"></i> Résumé de la réservation</h2>
 
                 <!-- Scooter Image -->
                 @if($reservation->scooter?->images->count() > 0)
                     <img src="{{ asset('storage/' . $reservation->scooter->images->first()->image_path) }}" alt="{{ $reservation->scooter->name }}" style="width: 100%; height: 180px; border-radius: 12px; object-fit: contain; background: var(--dark-lighter); margin-bottom: 20px;">
                 @else
-                    <div style="width: 100%; height: 180px; border-radius: 12px; background: var(--dark-lighter); display: flex; align-items: center; justify-content: center; font-size: 4rem; opacity: 0.3; margin-bottom: 20px;">🛴</div>
+                    <div style="width: 100%; height: 180px; border-radius: 12px; background: var(--dark-lighter); display: flex; align-items: center; justify-content: center; font-size: 4rem; opacity: 0.3; margin-bottom: 20px;"><i class="fa-solid fa-motorcycle"></i></div>
                 @endif
 
                 <!-- Scooter Info -->
@@ -96,7 +96,7 @@
         <!-- Payment Form -->
         <div class="card">
             <div class="card-body">
-                <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 24px;">💰 Informations de paiement</h2>
+                <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 24px;"><i class="fa-solid fa-euro-sign"></i> Informations de paiement</h2>
 
                 <form id="payment-form" method="POST" action="{{ route('payments.store', $reservation) }}" style="display: none;">
                     @csrf
@@ -110,12 +110,12 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
                         <label class="card" style="padding: 20px; cursor: pointer; text-align: center; transition: all 0.3s; border: 2px solid var(--primary);" id="card-option">
                             <input type="radio" name="payment_method" value="card" checked style="display: none;">
-                            <div style="font-size: 2rem; margin-bottom: 8px;">💳</div>
+                            <div style="font-size: 2rem; margin-bottom: 8px;"><i class="fa-solid fa-credit-card"></i></div>
                             <div style="font-weight: 700; color: var(--primary);">Carte</div>
                         </label>
                         <label class="card" style="padding: 20px; cursor: pointer; text-align: center; transition: all 0.3s; border: 2px solid transparent;" id="cash-option">
                             <input type="radio" name="payment_method" value="cash" style="display: none;">
-                            <div style="font-size: 2rem; margin-bottom: 8px;">💵</div>
+                            <div style="font-size: 2rem; margin-bottom: 8px;"><i class="fa-solid fa-money-bill-wave"></i></div>
                             <div style="font-weight: 700;">Espèces</div>
                         </label>
                     </div>
@@ -124,20 +124,20 @@
                 <!-- Stripe Payment Element -->
                 <div id="payment-element" style="margin-bottom: 24px; min-height: 200px; padding: 24px; background: var(--dark-lighter); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
                     <div style="text-align: center; color: var(--gray);">
-                        <p style="font-size: 0.9rem;">⚠️ L'élément de paiement Stripe apparaîtra ici</p>
+                        <p style="font-size: 0.9rem;"><i class="fa-solid fa-exclamation-triangle"></i> L'élément de paiement Stripe apparaîtra ici</p>
                         <p style="font-size: 0.8rem; margin-top: 8px;">Entrez les détails de votre carte pour procéder au paiement</p>
                     </div>
                 </div>
 
                 <!-- Pay Button -->
                 <button type="button" id="payment-button" onclick="submitPayment()" class="btn btn-primary btn-lg" style="width: 100%; justify-content: center; margin-bottom: 16px;">
-                    🔒 Payer {{ number_format($reservation->total_price, 2) }} $
+                    <i class="fa-solid fa-lock"></i> Payer {{ number_format($reservation->total_price, 2) }} $
                 </button>
 
                 <!-- Security Info -->
                 <div style="text-align: center; padding: 16px; background: var(--dark-lighter); border-radius: 8px;">
                     <p style="color: var(--gray); font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                        <span>🔐</span> Paiement sécurisé par Stripe
+                        <span><i class="fa-solid fa-shield-alt"></i></span> Paiement sécurisé par Stripe
                     </p>
                 </div>
 
@@ -148,7 +148,7 @@
                     </p>
                     <form action="{{ route('reservations.show', $reservation) }}" method="GET">
                         <button type="submit" class="btn btn-secondary" style="width: 100%;">
-                            💵 Payer sur place
+                            <i class="fa-solid fa-money-bill-wave"></i> Payer sur place
                         </button>
                     </form>
                 </div>
@@ -178,13 +178,13 @@
         const button = document.getElementById('payment-button');
         
         button.disabled = true;
-        button.innerHTML = '⏳ Traitement en cours...';
+        button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Traitement en cours...';
         
         // In a real implementation, this would integrate with Stripe
         setTimeout(() => {
             alert('Le paiement Stripe nécessite une configuration complète. Veuillez contacter l\'administrateur.');
             button.disabled = false;
-            button.innerHTML = '🔒 Payer {{ number_format($reservation->total_price, 2) }} $';
+            button.innerHTML = '<i class="fa-solid fa-lock"></i> Payer {{ number_format($reservation->total_price, 2) }} $';
         }, 1000);
     }
     

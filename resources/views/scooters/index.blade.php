@@ -36,7 +36,7 @@
                     </select>
                 </div>
                 <div style="display: flex; gap: 8px;">
-                    <button type="submit" class="btn btn-primary">🔍 Filtrer</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-search"></i> Filtrer</button>
                     <a href="{{ route('scooters.index') }}" class="btn btn-secondary">↺ Reset</a>
                 </div>
             </form>
@@ -51,13 +51,13 @@
                     @if($scooter->images->count() > 0)
                         <img src="{{ asset('storage/' . $scooter->images->first()->image_path) }}" alt="{{ $scooter->name }}" class="card-image">
                     @else
-                        <div class="card-image" style="display: flex; align-items: center; justify-content: center; font-size: 4rem; opacity: 0.3;">🛴</div>
+                        <div class="card-image" style="display: flex; align-items: center; justify-content: center; font-size: 4rem; opacity: 0.3;"><i class="fa-solid fa-motorcycle"></i></div>
                     @endif
                     <div class="card-body">
                         <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
                             <div>
                                 <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 4px;">{{ $scooter->name }}</h3>
-                                <p style="color: var(--gray); font-size: 0.9rem;">📍 {{ $scooter->location ?? 'Paris' }}</p>
+                                <p style="color: var(--gray); font-size: 0.9rem;"><i class="fa-solid fa-map-marker-alt"></i> {{ $scooter->location ?? 'Paris' }}</p>
                             </div>
                             <span class="badge {{ $scooter->status === 'available' ? 'badge-success' : 'badge-warning' }}">
                                 {{ $scooter->status === 'available' ? 'Disponible' : 'En location' }}
@@ -65,8 +65,8 @@
                         </div>
 
                         <div style="display: flex; gap: 16px; margin-bottom: 16px; color: var(--gray); font-size: 0.85rem;">
-                            <span>⚡ {{ $scooter->max_speed ?? 25 }} km/h</span>
-                            <span>🔋 {{ $scooter->battery_level ?? 100 }}%</span>
+                            <span><i class="fa-solid fa-bolt"></i> {{ $scooter->max_speed ?? 25 }} km/h</span>
+                            <span><i class="fa-solid fa-battery-full"></i> {{ $scooter->battery_level ?? 100 }}%</span>
                         </div>
 
                         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -89,7 +89,7 @@
         @endif
     @else
         <div class="empty-state">
-            <div class="empty-state-icon">🛴</div>
+            <div class="empty-state-icon"><i class="fa-solid fa-motorcycle"></i></div>
             <h3 style="margin-bottom: 8px;">Aucune trottinette trouvée</h3>
             <p>Essayez de modifier vos filtres ou revenez plus tard.</p>
             <a href="{{ route('scooters.index') }}" class="btn btn-primary" style="margin-top: 20px;">Voir toutes les trottinettes</a>

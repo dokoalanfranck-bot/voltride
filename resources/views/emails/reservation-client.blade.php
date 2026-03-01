@@ -160,7 +160,7 @@
 
             <!-- Réservation Details -->
             <div class="section">
-                <h2>📋 Détails de votre réservation</h2>
+                <h2>Détails de votre réservation</h2>
                 
                 <div class="info-row">
                     <span class="label">Numéro de réservation</span>
@@ -200,7 +200,7 @@
                         @if($reservation->status === 'pending')
                             <span style="background: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 4px; font-size: 12px;">En attente</span>
                         @elseif($reservation->status === 'confirmed')
-                            <span style="background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-size: 12px;">✓ Confirmée</span>
+                            <span style="background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Confirmée</span>
                         @endif
                     </span>
                 </div>
@@ -208,23 +208,23 @@
 
             <!-- Scooter Info -->
             <div class="section">
-                <h2>⚡ Votre trottinette</h2>
+                <h2>Votre trottinette</h2>
                 
                 <div class="scooter-info">
                     <div class="scooter-name">{{ $scooter->name }}</div>
-                    <div class="address">📍 {{ $scooter->location }}</div>
+                    <div class="address">Localisation : {{ $scooter->location }}</div>
                     <div>
                         <span style="color: #4a5568;">Description: </span>{{ Str::limit($scooter->description, 100) }}
                     </div>
                     <div style="margin-top: 10px;">
-                        <span class="battery">🔋 Batterie: {{ $scooter->battery_level }}%</span>
+                        <span class="battery">Batterie : {{ $scooter->battery_level }}%</span>
                     </div>
                 </div>
             </div>
 
             <!-- Pricing -->
             <div class="section">
-                <h2>💰 Tarification</h2>
+                <h2>Tarification</h2>
                 
                 <div class="info-row">
                     <span class="label">Prix à l'heure</span>
@@ -245,7 +245,7 @@
 
             <!-- Important Info -->
             <div class="info-box">
-                <strong>💡 À savoir avant votre location</strong>
+                <strong>A savoir avant votre location</strong>
                 <ul style="margin: 8px 0; padding-left: 20px;">
                     <li>Paiement sur place en espèces ou par carte</li>
                     <li>Identité et caution 50€ requises</li>
@@ -265,8 +265,8 @@
             <!-- Contact Info -->
             <div style="margin-top: 30px; padding: 15px; background: #f3f4f6; border-radius: 8px; text-align: center; font-size: 13px; color: #6b7280;">
                 <p style="margin: 5px 0;"><strong>Besoin d'aide?</strong></p>
-                <p style="margin: 5px 0;">📞 Téléphone: +33 1 23 45 67 89</p>
-                <p style="margin: 0;">📧 Email: support@voltride.fr</p>
+                <p style="margin: 5px 0;">Téléphone : +33 1 23 45 67 89</p>
+                <p style="margin: 0;">Email : support@voltride.fr</p>
             </div>
         </div>
 

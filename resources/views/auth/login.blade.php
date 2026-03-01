@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion - VoltRide</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
             --primary: #00FF6A;
@@ -247,7 +248,7 @@
     <div class="login-container">
         <div class="login-card">
             <div class="logo">
-                <div class="logo-icon">⚡</div>
+                <div class="logo-icon"><i class="fa-solid fa-bolt"></i></div>
                 <h1>Volt<span>Ride</span></h1>
                 <p>Connectez-vous à votre compte</p>
             </div>

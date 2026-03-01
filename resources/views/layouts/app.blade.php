@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -748,23 +749,23 @@
         </a>
 
         <div class="navbar-menu">
-            <a href="{{ route('scooters.index') }}">🛴 Trottinettes</a>
+            <a href="{{ route('scooters.index') }}"><i class="fa-solid fa-motorcycle"></i> Trottinettes</a>
             @auth
-                <a href="{{ route('reservations.index') }}">📅 Mes réservations</a>
+                <a href="{{ route('reservations.index') }}"><i class="fa-solid fa-calendar-check"></i> Mes réservations</a>
                 @if(auth()->user()->isAdmin())
-                    <a href="{{ route('admin.dashboard') }}">📊 Dashboard</a>
-                    <a href="{{ route('admin.scooters.index') }}">⚙️ Gestion</a>
+                    <a href="{{ route('admin.dashboard') }}"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                    <a href="{{ route('admin.scooters.index') }}"><i class="fa-solid fa-gear"></i> Gestion</a>
                 @endif
             @endauth
         </div>
 
         <div class="navbar-user">
             <button class="theme-toggle" onclick="toggleTheme()" title="Changer de thème">
-                <span id="theme-icon">🌙</span>
+                <span id="theme-icon"><i class="fa-solid fa-moon"></i></span>
             </button>
             @auth
                 <div class="user-badge">
-                    👤 {{ auth()->user()->name }}
+                    <i class="fa-solid fa-user"></i> {{ auth()->user()->name }}
                     @if(auth()->user()->isAdmin())
                         <span class="admin-badge">ADMIN</span>
                     @endif
@@ -774,11 +775,11 @@
                     <button type="submit" class="btn btn-secondary btn-sm">Déconnexion</button>
                 </form>
             @else
-                <a href="{{ route('login') }}" class="btn btn-primary btn-sm">Se connecter</a>
+                {{-- Login hidden from public - accessible via /login URL only --}}
             @endauth
         </div>
 
-        <button class="mobile-toggle" onclick="toggleMobileMenu()">☰</button>
+        <button class="mobile-toggle" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars"></i></button>
     </nav>
 
     <!-- Main Content -->
@@ -797,7 +798,7 @@
                 <a href="{{ route('scooters.index') }}">Nos trottinettes</a>
                 <a href="{{ route('welcome') }}">Accueil</a>
                 @guest
-                    <a href="{{ route('login') }}">Connexion</a>
+                    {{-- Login hidden from public --}}
                 @endguest
             </div>
             <div class="footer-copy">
@@ -825,7 +826,7 @@
         function updateThemeIcon(theme) {
             const icon = document.getElementById('theme-icon');
             if (icon) {
-                icon.textContent = theme === 'dark' ? '🌙' : '☀️';
+                icon.innerHTML = theme === 'dark' ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
             }
         }
         

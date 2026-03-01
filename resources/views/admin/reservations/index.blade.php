@@ -9,7 +9,7 @@
         <div>
             <a href="{{ route('admin.dashboard') }}" style="color: var(--gray); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 8px;">← Retour au dashboard</a>
             <h1 style="font-size: 2rem; font-weight: 800; letter-spacing: -1px;">
-                📋 Gestion des <span style="color: var(--primary);">Réservations</span>
+                Gestion des <span style="color: var(--primary);">Réservations</span>
             </h1>
         </div>
     </div>
@@ -109,11 +109,11 @@
                                 </td>
                                 <td>
                                     @if($reservation->status === 'pending')
-                                        <span class="badge badge-warning">⏳ En attente</span>
+                                        <span class="badge badge-warning">En attente</span>
                                     @elseif($reservation->status === 'active')
-                                        <span class="badge badge-info">✓ En cours</span>
+                                        <span class="badge badge-info">En cours</span>
                                     @elseif($reservation->status === 'completed')
-                                        <span class="badge badge-success">✓ Terminée</span>
+                                        <span class="badge badge-success">Terminée</span>
                                     @else
                                         <span class="badge badge-danger">✗ Annulée</span>
                                     @endif
@@ -132,14 +132,14 @@
                                 </td>
                                 <td>
                                     <a href="{{ route('admin.reservations.show', $reservation) }}" class="btn btn-secondary" style="padding: 8px 12px; font-size: 0.85rem;">
-                                        👁️ Voir
+                                        Voir
                                     </a>
                                 </td>
                             </tr>
                         @empty
                             <tr>
                                 <td colspan="8" style="text-align: center; padding: 40px;">
-                                    <div style="font-size: 3rem; margin-bottom: 16px; opacity: 0.3;">📋</div>
+                                    <div style="font-size: 3rem; margin-bottom: 16px; opacity: 0.3;"><span class="icon-pro">R</span></div>
                                     <p style="color: var(--gray);">Aucune réservation trouvée</p>
                                 </td>
                             </tr>

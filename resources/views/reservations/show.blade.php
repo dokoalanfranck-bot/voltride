@@ -11,18 +11,18 @@
                 ← Retour aux réservations
             </a>
             <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -1px;">
-                📋 Réservation <span style="color: var(--primary);">#{{ $reservation->id }}</span>
+                <i class="fa fa-file-alt" aria-hidden="true" title="Réservation"></i> <span style="color: var(--primary);">#{{ $reservation->id }}</span>
             </h1>
         </div>
         
         <!-- Status Badges -->
         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
             @if($reservation->status === 'pending')
-                <span class="badge badge-warning">⏳ En attente</span>
+                <span class="badge badge-warning"><i class="fa fa-hourglass-half" aria-hidden="true" title="En attente"></i> En attente</span>
             @elseif($reservation->status === 'active')
-                <span class="badge badge-info">✓ En cours</span>
+                <span class="badge badge-info"><i class="fa fa-play-circle" aria-hidden="true" title="En cours"></i> En cours</span>
             @elseif($reservation->status === 'completed')
-                <span class="badge badge-success">✓ Terminée</span>
+                <span class="badge badge-success"><i class="fa fa-check-circle" aria-hidden="true" title="Terminée"></i> Terminée</span>
             @elseif($reservation->status === 'cancelled')
                 <span class="badge badge-danger">✗ Annulée</span>
             @endif
@@ -54,14 +54,14 @@
                 @if($reservation->scooter?->images->count() > 0)
                     <img src="{{ asset('storage/' . $reservation->scooter->images->first()->image_path) }}" alt="{{ $reservation->scooter->name }}" style="width: 100%; height: 200px; border-radius: 12px; object-fit: contain; background: var(--dark-lighter); margin-bottom: 20px;">
                 @else
-                    <div style="width: 100%; height: 200px; border-radius: 12px; background: var(--dark-lighter); display: flex; align-items: center; justify-content: center; font-size: 4rem; opacity: 0.3; margin-bottom: 20px;">🛴</div>
+                    <div style="width: 100%; height: 200px; border-radius: 12px; background: var(--dark-lighter); display: flex; align-items: center; justify-content: center; font-size: 4rem; opacity: 0.3; margin-bottom: 20px;"><i class="fa fa-bicycle" aria-hidden="true" title="Trottinette"></i></div>
                 @endif
                 
                 <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 8px;">
                     {{ $reservation->scooter?->name ?? 'Trottinette supprimée' }}
                 </h2>
                 <p style="color: var(--gray); margin-bottom: 16px;">
-                    📍 {{ $reservation->scooter?->location ?? 'Localisation non disponible' }}
+                    <i class="fa fa-map-marker-alt" aria-hidden="true" title="Localisation"></i> {{ $reservation->scooter?->location ?? 'Localisation non disponible' }}
                 </p>
                 
                 <div style="background: var(--dark-lighter); padding: 16px; border-radius: 8px;">
@@ -74,7 +74,7 @@
         <!-- Reservation Details -->
         <div class="card">
             <div class="card-body">
-                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 20px;">📅 Détails de la réservation</h3>
+                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 20px;"><i class="fa fa-calendar-alt" aria-hidden="true" title="Détails de la réservation"></i> Détails de la réservation</h3>
                 
                 <!-- Dates -->
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
@@ -111,7 +111,7 @@
                 <div style="background: var(--dark-lighter); padding: 16px; border-radius: 8px;">
                     <p style="color: var(--gray); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 8px;">Type de client</p>
                     <p style="font-weight: 600; font-size: 1.1rem;">
-                        {{ $reservation->is_tourist ? '✈️ Touriste' : '👤 Local' }}
+                        {!! $reservation->is_tourist ? '<i class=\'fa fa-plane\' aria-hidden=\'true\' title=\'Touriste\'></i> Touriste' : '<i class=\'fa fa-user\' aria-hidden=\'true\' title=\'Local\'></i> Local' !!}
                     </p>
                 </div>
             </div>
@@ -121,7 +121,7 @@
     <!-- Pricing Details -->
     <div class="card" style="margin-bottom: 32px;">
         <div class="card-body">
-            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;">💰 Détails du prix</h3>
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;"><i class="fa fa-euro-sign" aria-hidden="true" title="Détails du prix"></i> Détails du prix</h3>
             
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(0, 255, 106, 0.1); border-radius: 12px; border: 1px solid rgba(0, 255, 106, 0.2);">
                 <span style="font-weight: 700; font-size: 1.2rem;">Total à payer</span>
@@ -163,7 +163,7 @@
     @if($reservation->status === 'pending' || $reservation->status === 'active')
         <div class="card">
             <div class="card-body">
-                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 20px;">⚡ Actions</h3>
+                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 20px;"><i class="fa fa-cogs" aria-hidden="true" title="Actions"></i> Actions</h3>
                 
                 <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                     @if($reservation->status === 'pending')
@@ -177,7 +177,7 @@
                     @endif
                     
                     <a href="{{ route('scooters.index') }}" class="btn btn-secondary">
-                        🛴 Voir d'autres trottinettes
+                        <i class="fa fa-bicycle" aria-hidden="true" title="Voir trottinettes"></i> Voir d'autres trottinettes
                     </a>
                 </div>
             </div>

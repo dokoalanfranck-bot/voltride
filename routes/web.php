@@ -42,6 +42,7 @@ Route::post('/reservations', [ReservationController::class, 'store'])->name('res
 Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
 
 // Authenticated Client Routes
+Route::middleware(['auth'])->group(function () {
     // Reservations (authenticated user only)
     Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
     Route::post('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
@@ -49,6 +50,7 @@ Route::get('/reservations/{reservation}', [ReservationController::class, 'show']
     // Payments
     Route::get('/reservations/{reservation}/payment', [PaymentController::class, 'show'])->name('reservations.payment');
     Route::post('/payments', [PaymentController::class, 'store'])->name('payments.store');
+});
 
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {

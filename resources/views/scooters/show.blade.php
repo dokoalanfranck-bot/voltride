@@ -18,7 +18,7 @@
                 @if($scooter->images->count() > 0)
                     <img src="{{ asset('storage/' . $scooter->images->first()->image_path) }}" alt="{{ $scooter->name }}" style="width: 100%; height: 400px; object-fit: contain; background: var(--dark-lighter);">
                 @else
-                    <div style="width: 100%; height: 400px; display: flex; align-items: center; justify-content: center; font-size: 8rem; opacity: 0.3; background: var(--dark-lighter);">🛴</div>
+                    <div style="width: 100%; height: 400px; display: flex; align-items: center; justify-content: center; font-size: 8rem; opacity: 0.3; background: var(--dark-lighter);"><i class="fa-solid fa-motorcycle"></i></div>
                 @endif
             </div>
 
@@ -37,12 +37,12 @@
         <div>
             <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
                 <span class="badge {{ $scooter->status === 'available' ? 'badge-success' : 'badge-warning' }}">
-                    {{ $scooter->status === 'available' ? '✓ Disponible' : '⏳ En location' }}
+                    {{ $scooter->status === 'available' ? 'Disponible' : 'En location' }}
                 </span>
             </div>
 
             <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -1px;">{{ $scooter->name }}</h1>
-            <p style="color: var(--gray); font-size: 1.1rem; margin-bottom: 24px;">📍 {{ $scooter->location ?? 'Paris, France' }}</p>
+            <p style="color: var(--gray); font-size: 1.1rem; margin-bottom: 24px;"><i class="fa-solid fa-map-marker-alt"></i> {{ $scooter->location ?? 'Paris, France' }}</p>
 
             <!-- Price -->
             <div class="card" style="margin-bottom: 24px;">
@@ -65,28 +65,28 @@
                     <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px;">Caractéristiques</h3>
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
                         <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 1.5rem;">⚡</span>
+                            <span style="font-size: 1.5rem;"><i class="fa-solid fa-bolt"></i></span>
                             <div>
                                 <p style="color: var(--gray); font-size: 0.8rem;">Vitesse max</p>
                                 <p style="font-weight: 600;">{{ $scooter->max_speed }} km/h</p>
                             </div>
                         </div>
                         <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 1.5rem;">🔋</span>
+                            <span style="font-size: 1.5rem;"><i class="fa-solid fa-battery-full"></i></span>
                             <div>
                                 <p style="color: var(--gray); font-size: 0.8rem;">Batterie</p>
                                 <p style="font-weight: 600;">{{ $scooter->battery_level ?? 100 }}%</p>
                             </div>
                         </div>
                         <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 1.5rem;">⚖️</span>
+                            <span style="font-size: 1.5rem;"><i class="fa-solid fa-weight-hanging"></i></span>
                             <div>
                                 <p style="color: var(--gray); font-size: 0.8rem;">Poids</p>
                                 <p style="font-weight: 600;">{{ $scooter->weight ?? '15' }} kg</p>
                             </div>
                         </div>
                         <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 1.5rem;">🛞</span>
+                            <span style="font-size: 1.5rem;"><i class="fa-solid fa-circle-dot"></i></span>
                             <div>
                                 <p style="color: var(--gray); font-size: 0.8rem;">Roues</p>
                                 <p style="font-weight: 600;">{{ $scooter->wheel_size ?? '10' }} pouces</p>
@@ -109,11 +109,11 @@
             <!-- CTA -->
             @if($scooter->status === 'available')
                 <a href="{{ route('reservations.create', $scooter) }}" class="btn btn-primary btn-lg" style="width: 100%; justify-content: center;">
-                    🚀 Réserver maintenant
+                    <i class="fa-solid fa-arrow-right"></i> Réserver maintenant
                 </a>
             @else
                 <button class="btn btn-secondary btn-lg" style="width: 100%; opacity: 0.6; cursor: not-allowed;" disabled>
-                    ⏳ Actuellement en location
+                    <i class="fa-solid fa-hourglass-half"></i> Actuellement en location
                 </button>
             @endif
         </div>

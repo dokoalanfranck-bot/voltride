@@ -218,13 +218,13 @@
         <div class="content">
             <!-- Alert -->
             <div class="alert-box">
-                <strong>⚠️ À traiter en priorité</strong>
+                <strong>A traiter en priorité</strong>
                 Une nouvelle réservation requiert votre attention. Vérifiez les détails et confirmez si nécessaire.
             </div>
 
             <!-- Réservation Basics -->
             <div class="section">
-                <h2>📋 Informations de Réservation</h2>
+                <h2>Informations de Réservation</h2>
                 
                 <div class="info-row">
                     <span class="label">Numéro</span>
@@ -266,7 +266,7 @@
 
             <!-- Scooter Info -->
             <div class="scooter-card">
-                <h2 style="color: #0a9b3a; margin-top: 0; font-size: 18px;">⚡ Trottinette</h2>
+                <h2 style="color: #0a9b3a; margin-top: 0; font-size: 18px;">Trottinette</h2>
                 <div class="scooter-name">{{ $scooter->name }}</div>
                 
                 <div style="margin-top: 12px;">
@@ -280,34 +280,34 @@
                     </div>
                     <div class="info-row">
                         <span class="label">Disponibilité</span>
-                        <span class="value" style="color: #10b981;">✓ Disponible</span>
+                        <span class="value" style="color: #10b981;">Disponible</span>
                     </div>
                 </div>
             </div>
 
             <!-- Client Info -->
             <div class="client-card">
-                <h2 style="color: #0284c7; margin-top: 0; font-size: 18px;">👤 Client</h2>
+                <h2 style="color: #0284c7; margin-top: 0; font-size: 18px;">Client</h2>
                 <div class="client-name">{{ $clientName }}</div>
                 
                 <div class="contact-item">
-                    <div class="contact-label">📧 Email</div>
+                    <div class="contact-label">Email</div>
                     <div class="contact-value">{{ $clientEmail }}</div>
                 </div>
                 
                 <div class="contact-item">
-                    <div class="contact-label">📱 Téléphone</div>
+                    <div class="contact-label">Téléphone</div>
                     <div class="contact-value">{{ $clientPhone }}</div>
                 </div>
 
                 @if($user)
                 <div class="contact-item">
-                    <div class="contact-label">👤 Type client</div>
+                    <div class="contact-label">Type client</div>
                     <div class="contact-value">Utilisateur enregistré</div>
                 </div>
                 @else
                 <div class="contact-item">
-                    <div class="contact-label">👤 Type client</div>
+                    <div class="contact-label">Type client</div>
                     <div class="contact-value">Client occasionnel</div>
                 </div>
                 @endif
@@ -315,7 +315,7 @@
 
             <!-- Pricing -->
             <div style="margin: 25px 0;">
-                <h2 style="color: #1f2937; font-size: 18px; font-weight: 700;">💰 Détails de Tarification</h2>
+                <h2 style="color: #1f2937; font-size: 18px; font-weight: 700;">Détails de Tarification</h2>
                 
                 <div style="background: #f9fafb; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                     <div class="info-row">
@@ -337,7 +337,7 @@
 
             <!-- Actions Required -->
             <div class="action-needed">
-                <strong>✓ Actions à effectuer</strong>
+                <strong>Actions à effectuer</strong>
                 <ul style="font-size: 14px;">
                     <li>Vérifier les informations du client</li>
                     <li>Confirmer que la trottinette est disponible</li>

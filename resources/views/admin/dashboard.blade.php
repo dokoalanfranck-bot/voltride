@@ -12,23 +12,23 @@
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px;">
         <div class="card" style="border-left: 4px solid var(--primary);">
             <div class="card-body">
-                <h3 style="color: var(--gray); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">🛴 Total Trottinettes</h3>
+                <h3 style="color: var(--gray); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Total Trottinettes</h3>
                 <p style="font-size: 2.5rem; font-weight: 800; color: var(--primary); margin-bottom: 8px;">{{ $totalScooters }}</p>
-                <p style="color: var(--primary); font-size: 0.9rem; font-weight: 600;">✓ {{ $activeScooters }} disponibles</p>
+                <p style="color: var(--primary); font-size: 0.9rem; font-weight: 600;">{{ $activeScooters }} disponibles</p>
             </div>
         </div>
 
         <div class="card" style="border-left: 4px solid #22c55e;">
             <div class="card-body">
-                <h3 style="color: var(--gray); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">📋 Total Réservations</h3>
+                <h3 style="color: var(--gray); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Total Réservations</h3>
                 <p style="font-size: 2.5rem; font-weight: 800; color: #22c55e; margin-bottom: 8px;">{{ $totalReservations }}</p>
-                <p style="color: #22c55e; font-size: 0.9rem; font-weight: 600;">✓ {{ $completedReservations }} complétées</p>
+                <p style="color: #22c55e; font-size: 0.9rem; font-weight: 600;">{{ $completedReservations }} complétées</p>
             </div>
         </div>
 
         <div class="card" style="border-left: 4px solid #f59e0b;">
             <div class="card-body">
-                <h3 style="color: var(--gray); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">💰 Revenu Total</h3>
+                <h3 style="color: var(--gray); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Revenu Total</h3>
                 <p style="font-size: 2.5rem; font-weight: 800; color: #f59e0b; margin-bottom: 8px;">{{ number_format($totalRevenue, 0) }} $</p>
                 <p style="color: #f59e0b; font-size: 0.9rem; font-weight: 600;">📈 {{ number_format($monthlyRevenue, 0) }} $ ce mois</p>
             </div>
@@ -46,21 +46,21 @@
     <!-- Quick Actions -->
     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px;">
         <a href="{{ route('admin.scooters.create') }}" class="btn btn-primary btn-lg" style="justify-content: center; padding: 24px;">
-            <span style="font-size: 1.5rem; margin-right: 12px;">➕</span>
+            <span style="font-size: 1.5rem; margin-right: 12px;"><i class="fa-solid fa-plus-circle"></i></span>
             <div style="text-align: left;">
                 <div style="font-weight: 700;">Nouvelle Trottinette</div>
                 <div style="font-size: 0.85rem; opacity: 0.8;">Ajouter au parc</div>
             </div>
         </a>
         <a href="{{ route('admin.scooters.index') }}" class="btn btn-secondary btn-lg" style="justify-content: center; padding: 24px;">
-            <span style="font-size: 1.5rem; margin-right: 12px;">🛴</span>
+            <span style="font-size: 1.5rem; margin-right: 12px;"><i class="fa-solid fa-motorcycle"></i></span>
             <div style="text-align: left;">
                 <div style="font-weight: 700;">Gérer les Trottinettes</div>
                 <div style="font-size: 0.85rem; opacity: 0.8;">{{ $totalScooters }} au total</div>
             </div>
         </a>
         <a href="{{ route('admin.reservations.index') }}" class="btn btn-secondary btn-lg" style="justify-content: center; padding: 24px;">
-            <span style="font-size: 1.5rem; margin-right: 12px;">📋</span>
+            <span style="font-size: 1.5rem; margin-right: 12px;"><i class="fa-solid fa-calendar-check"></i></span>
             <div style="text-align: left;">
                 <div style="font-weight: 700;">Gérer les Réservations</div>
                 <div style="font-size: 0.85rem; opacity: 0.8;">{{ $pendingReservations ?? 0 }} en attente</div>
@@ -74,7 +74,7 @@
         <div class="card">
             <div class="card-body">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="font-size: 1.1rem; font-weight: 700;">📋 Réservations récentes</h3>
+                    <h3 style="font-size: 1.1rem; font-weight: 700;">Réservations récentes</h3>
                     <a href="{{ route('admin.reservations.index') }}" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">Voir tout →</a>
                 </div>
                 
@@ -121,7 +121,7 @@
         <div class="card">
             <div class="card-body">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="font-size: 1.1rem; font-weight: 700;">🛴 Trottinettes</h3>
+                    <h3 style="font-size: 1.1rem; font-weight: 700;">Trottinettes</h3>
                     <a href="{{ route('admin.scooters.index') }}" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">Voir tout →</a>
                 </div>
                 
