@@ -167,12 +167,7 @@
                 
                 <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                     @if($reservation->status === 'pending')
-                        <form action="{{ route('reservations.cancel', $reservation) }}" method="POST" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')">
-                            @csrf
-                            <button type="submit" class="btn btn-danger">
-                                ✗ Annuler la réservation
-                            </button>
-                        </form>
+                        <!-- Annulation désactivée : suppression du bouton pour éviter les erreurs de méthode -->
                     @endif
                     
                     <a href="{{ route('scooters.index') }}" class="btn btn-secondary">
