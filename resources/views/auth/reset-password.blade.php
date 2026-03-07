@@ -206,7 +206,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('password.store') }}">
+            <form method="POST" action="{{ route('password.update') }}">
                 @csrf
                 <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
