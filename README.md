@@ -253,15 +253,11 @@ Ce projet est sous licence MIT. Voir [LICENSE](LICENSE) pour plus de détails.
 ## 🎓 Crédits
 
 - **Framework**: [Laravel](https://laravel.com)
-- **Design Inspiration**: [VoltRide.com](https://voltride.com)
 - **Icons**: Font Awesome
 - **Fonts**: Google Fonts (Inter, Poppins)
 
 ---
 
-<p align="center">
-  Made with ❤️ by <strong>VoltRide Team</strong>
-</p>
 
 <p align="center">
   <strong>Version 1.0.0</strong> | Production Ready ✅
