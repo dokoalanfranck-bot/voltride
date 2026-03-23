@@ -719,7 +719,7 @@
     <section class="how-it-works" id="how">
         <div class="section-header animate-on-scroll">
             <div class="section-tag">Simplicité</div>
-            <h2 class="section-title">Réservez en 3 étapes</h2>
+            <h2 class="section-title">Réservez en 4 étapes</h2>
             <p class="section-subtitle">Pas de processus compliqué. Juste une expérience fluide et rapide.</p>
         </div>
         
@@ -736,6 +736,11 @@
             </div>
             <div class="step animate-on-scroll">
                 <div class="step-number">3</div>
+                <h3>Vérification d'identité</h3>
+                <p>Laissez votre pièce d'identité (passeport, permis ou carte) au point de location. Elle sera conservée de manière sécurisée durant toute la durée de votre location.</p>
+            </div>
+            <div class="step animate-on-scroll">
+                <div class="step-number">4</div>
                 <h3>Roulez</h3>
                 <p>Récupérez votre trottinette, payez sur place et profitez de votre trajet. C'est aussi simple que ça.</p>
             </div>
