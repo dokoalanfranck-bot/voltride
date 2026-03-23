@@ -652,7 +652,7 @@
         <div class="hero-content">
             <div class="hero-badge">
                 <span><i class="fa-solid fa-bolt"></i></span>
-                <span>Disponible maintenant dans votre ville</span>
+                <span>Disponible maintenant à Grand Baie</span>
             </div>
             <h1 class="hero-title">
                 La mobilité<br>
@@ -660,7 +660,7 @@
                 réinventée
             </h1>
             <p class="hero-subtitle">
-                Louez une trottinette électrique en quelques secondes. Sans inscription, sans engagement. Juste la liberté de rouler.
+                Location de trottinettes et motos électriques premium. Écologique, silencieux et sans effort.
             </p>
             <div class="hero-cta">
                 <a href="{{ route('scooters.index') }}" class="btn btn-primary">
@@ -771,7 +771,7 @@
                 @endguest
             </div>
             <div class="footer-copy">
-                <p>© {{ date('Y') }} VoltRide. Tous droits réservés. Paiement sécurisé sur place.</p>
+                <p style="color: #4CAF50;">© {{ date('Y') }} VoltRide. Move green, Ride clean!</p>
             </div>
         </div>
     </footer>
