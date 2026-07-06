@@ -3,72 +3,50 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ScooterController;
 use App\Http\Controllers\ReservationController;
-use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StorageController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminScooterController;
 use App\Http\Controllers\Admin\AdminReservationController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+Route::get('/', fn () => view('welcome'))->name('welcome');
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
-
-// Storage Routes (serve images and logos without symlink requirement)
 Route::get('/storage/{path}', [StorageController::class, 'getImage'])
-    ->where('path', '.*')
-    ->name('storage.image');
+    ->where('path', '.*')->name('storage.image');
+Route::get('/logo/{filename}', [StorageController::class, 'getLogo'])->name('storage.logo');
 
-Route::get('/logo/{filename}', [StorageController::class, 'getLogo'])
-    ->name('storage.logo');
-
-// Public Scooter Routes
+// Public scooter routes
 Route::get('/scooters', [ScooterController::class, 'index'])->name('scooters.index');
 Route::get('/scooters/{scooter}', [ScooterController::class, 'show'])->name('scooters.show');
 
-// Public Reservation Routes (no authentication required for guests)
+// Reservation: create + store are public (guest reservations)
 Route::get('/scooters/{scooter}/reserve', [ReservationController::class, 'create'])->name('reservations.create');
-Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
+Route::post('/reservations', [ReservationController::class, 'store'])
+    ->middleware('throttle:reservations')
+    ->name('reservations.store');
 Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
 
-// Authenticated Client Routes
-Route::middleware(['auth'])->group(function () {
-    // Reservations (authenticated user only)
+// API
+Route::post('/api/reservations/check-availability', [ReservationController::class, 'apiCheckAvailability'])
+    ->middleware('throttle:60,1')
+    ->name('api.reservations.check');
+
+// Authenticated client routes
+Route::middleware('auth')->group(function () {
     Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
     Route::post('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
-
-    // Payments
-    Route::get('/reservations/{reservation}/payment', [PaymentController::class, 'show'])->name('reservations.payment');
-    Route::post('/payments', [PaymentController::class, 'store'])->name('payments.store');
 });
 
-// Admin Routes
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+// Admin routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Scooter Management
-    Route::resource('scooters', AdminScooterController::class, [
-        'as' => 'admin'
-    ]);
+    Route::resource('scooters', AdminScooterController::class);
 
-    // Reservation Management
-    Route::get('/reservations', [AdminReservationController::class, 'index'])->name('admin.reservations.index');
-    Route::get('/reservations/{reservation}', [AdminReservationController::class, 'show'])->name('admin.reservations.show');
-    Route::put('/reservations/{reservation}', [AdminReservationController::class, 'update'])->name('admin.reservations.update');
-    Route::post('/reservations/{reservation}/complete', [AdminReservationController::class, 'markCompleted'])->name('admin.reservations.complete');
-    Route::post('/payments/{payment}/refund', [PaymentController::class, 'refund'])->name('admin.payments.refund');
-    Route::post('/reservations/{reservation}/validate-payment', [AdminReservationController::class, 'validatePayment'])->name('admin.reservations.validatePayment');
+    Route::get('/reservations', [AdminReservationController::class, 'index'])->name('reservations.index');
+    Route::get('/reservations/{reservation}', [AdminReservationController::class, 'show'])->name('reservations.show');
+    Route::put('/reservations/{reservation}', [AdminReservationController::class, 'update'])->name('reservations.update');
+    Route::post('/reservations/{reservation}/complete', [AdminReservationController::class, 'markCompleted'])->name('reservations.complete');
+    Route::post('/reservations/{reservation}/validate-payment', [AdminReservationController::class, 'validatePayment'])->name('reservations.validatePayment');
 });
 
-// Authentication Routes
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

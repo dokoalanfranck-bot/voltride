@@ -1,173 +1,172 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('title', 'Gestion des Réservations - VoltRide Admin')
+@section('title', 'Réservations')
+@section('breadcrumb', 'Réservations')
 
 @section('content')
-<div class="container" style="padding-top: 40px; padding-bottom: 60px;">
-    <!-- Header -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 16px;">
-        <div>
-            <a href="{{ route('admin.dashboard') }}" style="color: var(--gray); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 8px;">← Retour au dashboard</a>
-            <h1 style="font-size: 2rem; font-weight: 800; letter-spacing: -1px;">
-                Gestion des <span style="color: var(--primary);">Réservations</span>
-            </h1>
-        </div>
-    </div>
-
-    <!-- Success Message -->
-    @if(session('success'))
-        <div class="alert alert-success" style="margin-bottom: 24px;">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <!-- Filters -->
-    <div class="card" style="margin-bottom: 24px;">
-        <div class="card-body">
-            <form action="{{ route('admin.reservations.index') }}" method="GET" style="display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end;">
-                <div class="form-group" style="flex: 1; min-width: 150px; margin-bottom: 0;">
-                    <label class="form-label">Statut</label>
-                    <select name="status" class="form-input">
-                        <option value="">Tous</option>
-                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>En attente</option>
-                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>En cours</option>
-                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Terminées</option>
-                        <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Annulées</option>
-                    </select>
-                </div>
-                <div class="form-group" style="flex: 1; min-width: 150px; margin-bottom: 0;">
-                    <label class="form-label">Paiement</label>
-                    <select name="payment_status" class="form-input">
-                        <option value="">Tous</option>
-                        <option value="pending" {{ request('payment_status') == 'pending' ? 'selected' : '' }}>En attente</option>
-                        <option value="paid" {{ request('payment_status') == 'paid' ? 'selected' : '' }}>Payé</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">🔍 Filtrer</button>
-                <a href="{{ route('admin.reservations.index') }}" class="btn btn-secondary">Réinitialiser</a>
-            </form>
-        </div>
-    </div>
-
-    <!-- Stats -->
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px;">
-        <div class="card">
-            <div class="card-body" style="text-align: center;">
-                <p style="color: var(--gray); font-size: 0.85rem; margin-bottom: 8px;">Total</p>
-                <p style="font-size: 2rem; font-weight: 800; color: var(--primary);">{{ $reservations->total() }}</p>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body" style="text-align: center;">
-                <p style="color: var(--gray); font-size: 0.85rem; margin-bottom: 8px;">En attente</p>
-                <p style="font-size: 2rem; font-weight: 800; color: #f59e0b;">{{ $reservations->where('status', 'pending')->count() }}</p>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body" style="text-align: center;">
-                <p style="color: var(--gray); font-size: 0.85rem; margin-bottom: 8px;">En cours</p>
-                <p style="font-size: 2rem; font-weight: 800; color: #3b82f6;">{{ $reservations->where('status', 'active')->count() }}</p>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body" style="text-align: center;">
-                <p style="color: var(--gray); font-size: 0.85rem; margin-bottom: 8px;">Terminées</p>
-                <p style="font-size: 2rem; font-weight: 800; color: #22c55e;">{{ $reservations->where('status', 'completed')->count() }}</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Reservations Table -->
-    <div class="card">
-        <div class="card-body">
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Client</th>
-                            <th>Trottinette</th>
-                            <th>Période</th>
-                            <th>Statut</th>
-                            <th>Paiement</th>
-                            <th>Prix</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($reservations as $reservation)
-                            <tr>
-                                <td style="font-weight: 600; color: var(--primary);">#{{ $reservation->id }}</td>
-                                <td>
-                                    <p style="font-weight: 600;">{{ $reservation->guest_name ?? $reservation->user?->name ?? 'N/A' }}</p>
-                                    <p style="color: var(--gray); font-size: 0.85rem;">{{ $reservation->guest_email ?? $reservation->user?->email ?? '' }}</p>
-                                </td>
-                                <td>{{ $reservation->scooter?->name ?? 'N/A' }}</td>
-                                <td>
-                                    <p style="font-size: 0.85rem;">{{ $reservation->start_time?->format('d/m/Y H:i') }}</p>
-                                    <p style="color: var(--gray); font-size: 0.85rem;">{{ $reservation->end_time?->format('d/m/Y H:i') }}</p>
-                                </td>
-                                <td>
-                                    @if($reservation->status === 'pending')
-                                        <span class="badge badge-warning">En attente</span>
-                                    @elseif($reservation->status === 'active')
-                                        <span class="badge badge-info">En cours</span>
-                                    @elseif($reservation->status === 'completed')
-                                        <span class="badge badge-success">Terminée</span>
-                                    @else
-                                        <span class="badge badge-danger">✗ Annulée</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if($reservation->payment_status === 'pending')
-                                        <span class="badge badge-warning">💳 En attente</span>
-                                    @elseif($reservation->payment_status === 'paid')
-                                        <span class="badge badge-success">💳 Payé</span>
-                                    @else
-                                        <span class="badge badge-info">💳 Remboursé</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <span class="price">{{ number_format($reservation->total_price, 2) }} $</span>
-                                </td>
-                                <td>
-                                    <a href="{{ route('admin.reservations.show', $reservation) }}" class="btn btn-secondary" style="padding: 8px 12px; font-size: 0.85rem;">
-                                        Voir
-                                    </a>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="8" style="text-align: center; padding: 40px;">
-                                    <div style="font-size: 3rem; margin-bottom: 16px; opacity: 0.3;"><span class="icon-pro">R</span></div>
-                                    <p style="color: var(--gray);">Aucune réservation trouvée</p>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Pagination -->
-            @if($reservations->hasPages())
-                <div style="margin-top: 24px; display: flex; justify-content: center;">
-                    {{ $reservations->links() }}
-                </div>
-            @endif
-        </div>
+<div class="page-header">
+    <div>
+        <div class="page-heading">Réservations</div>
+        <div class="page-subtitle">{{ $reservations->total() }} réservation{{ $reservations->total() > 1 ? 's' : '' }}</div>
     </div>
 </div>
 
-<style>
-    @media (max-width: 768px) {
-        .container > div:nth-child(4) {
-            grid-template-columns: repeat(2, 1fr) !important;
-        }
-    }
-    @media (max-width: 500px) {
-        .container > div:nth-child(4) {
-            grid-template-columns: 1fr !important;
-        }
-    }
-</style>
+<form method="GET">
+    {{-- Mobile toggle --}}
+    <button type="button" class="filters-toggle" onclick="toggleFilters(this)">
+        <i class="fa-solid fa-sliders"></i>
+        <span class="filters-toggle-label">Afficher les filtres</span>
+        @if(request()->hasAny(['search','status','payment_status','date_from','date_to']))
+            <span class="badge badge-green" style="margin-left:auto;">Actifs</span>
+        @endif
+        <i class="fa-solid fa-chevron-down filters-toggle-icon" style="margin-left:auto;transition:transform .2s;"></i>
+    </button>
+
+    <div class="filters-body filters-bar">
+        <input type="text" name="search" class="form-control search-input"
+               placeholder="Nom ou email..." value="{{ request('search') }}">
+        <select name="status" class="form-control">
+            <option value="">Tous les statuts</option>
+            <option value="pending"   {{ request('status')==='pending'   ? 'selected':'' }}>En attente</option>
+            <option value="active"    {{ request('status')==='active'    ? 'selected':'' }}>En cours</option>
+            <option value="completed" {{ request('status')==='completed' ? 'selected':'' }}>Terminées</option>
+            <option value="cancelled" {{ request('status')==='cancelled' ? 'selected':'' }}>Annulées</option>
+        </select>
+        <select name="payment_status" class="form-control">
+            <option value="">Paiement — tous</option>
+            <option value="pending"   {{ request('payment_status')==='pending'   ? 'selected':'' }}>En attente</option>
+            <option value="completed" {{ request('payment_status')==='completed' ? 'selected':'' }}>Réglé</option>
+        </select>
+        <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}" style="max-width:160px;">
+        <input type="date" name="date_to"   class="form-control" value="{{ request('date_to') }}"   style="max-width:160px;">
+        <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-filter"></i> Filtrer</button>
+        @if(request()->hasAny(['search','status','payment_status','date_from','date_to']))
+            <a href="{{ route('admin.reservations.index') }}" class="btn btn-secondary btn-sm"><i class="fa-solid fa-xmark"></i> Réinitialiser</a>
+        @endif
+    </div>
+</form>
+
+<div class="card">
+
+    {{-- ── Desktop table ───────────────────────────── --}}
+    <div class="table-wrap desktop-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Client</th>
+                    <th>Trottinette</th>
+                    <th>Période</th>
+                    <th>Statut</th>
+                    <th>Paiement</th>
+                    <th>Montant</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($reservations as $r)
+                @php
+                    $b = match($r->status){ 'pending'=>'badge-amber','active'=>'badge-blue','completed'=>'badge-green','cancelled'=>'badge-gray',default=>'badge-gray'};
+                    $l = match($r->status){ 'pending'=>'En attente','active'=>'En cours','completed'=>'Terminée','cancelled'=>'Annulée',default=>$r->status};
+                @endphp
+                <tr>
+                    <td><span style="font-family:monospace;font-size:11px;color:var(--txt3);">#{{ $r->id }}</span></td>
+                    <td>
+                        <div class="td-main">{{ $r->user?->name ?? $r->guest_name ?? 'Invité' }}</div>
+                        <div style="font-size:11px;color:var(--txt3);">{{ $r->user?->email ?? $r->guest_email ?? '' }}</div>
+                    </td>
+                    <td class="td-main">{{ $r->scooter?->name ?? '—' }}</td>
+                    <td>
+                        <div style="font-size:12px;">{{ $r->start_time?->format('d/m/Y H:i') }}</div>
+                        <div style="font-size:11px;color:var(--txt3);">→ {{ $r->end_time?->format('H:i') }}</div>
+                    </td>
+                    <td><span class="badge {{ $b }}"><span class="badge-dot"></span>{{ $l }}</span></td>
+                    <td>
+                        @if($r->payment_status === 'completed')
+                            <span class="badge badge-green"><span class="badge-dot"></span>Réglé</span>
+                        @elseif($r->payment_status === 'refunded')
+                            <span class="badge badge-purple"><span class="badge-dot"></span>Remboursé</span>
+                        @else
+                            <span class="badge badge-amber"><span class="badge-dot"></span>En attente</span>
+                        @endif
+                    </td>
+                    <td style="font-weight:600;">{{ $r->total_price ? number_format($r->total_price,2,',',' ').'€' : '—' }}</td>
+                    <td>
+                        <a href="{{ route('admin.reservations.show', $r) }}" class="btn btn-secondary btn-sm">
+                            <i class="fa-solid fa-eye"></i> Voir
+                        </a>
+                    </td>
+                </tr>
+                @empty
+                <tr><td colspan="8"><div class="empty-state"><i class="fa-regular fa-calendar-xmark"></i><p>Aucune réservation trouvée</p></div></td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    {{-- ── Mobile cards ────────────────────────────── --}}
+    <div class="mobile-row-cards">
+        @forelse($reservations as $r)
+        @php
+            $b = match($r->status){ 'pending'=>'badge-amber','active'=>'badge-blue','completed'=>'badge-green','cancelled'=>'badge-gray',default=>'badge-gray'};
+            $l = match($r->status){ 'pending'=>'En attente','active'=>'En cours','completed'=>'Terminée','cancelled'=>'Annulée',default=>$r->status};
+        @endphp
+        <div class="mobile-row-card" style="cursor:pointer;" onclick="location.href='{{ route('admin.reservations.show', $r) }}'">
+            <div class="mobile-row-card-top">
+                <div style="flex:1;min-width:0;">
+                    <div class="mobile-row-card-title">
+                        {{ $r->user?->name ?? $r->guest_name ?? 'Invité' }}
+                    </div>
+                    <div class="mobile-row-card-sub">
+                        {{ $r->scooter?->name ?? 'Trottinette N/A' }}
+                        &nbsp;·&nbsp;
+                        <span style="font-family:monospace;font-size:10px;">#{{ $r->id }}</span>
+                    </div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;">
+                    <span class="badge {{ $b }}" style="font-size:10px;"><span class="badge-dot"></span>{{ $l }}</span>
+                    <span style="font-size:14px;font-weight:800;color:var(--primary);">
+                        {{ $r->total_price ? number_format($r->total_price,2,',','.').'€' : '—' }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="mobile-row-card-meta">
+                {{-- Dates --}}
+                @if($r->start_time)
+                <span style="font-size:12px;color:var(--txt2);">
+                    <i class="fa-solid fa-calendar" style="font-size:10px;"></i>
+                    {{ $r->start_time->format('d/m H:i') }}
+                    @if($r->end_time) → {{ $r->end_time->format('H:i') }} @endif
+                </span>
+                @endif
+                {{-- Payment --}}
+                @if($r->payment_status === 'completed')
+                    <span class="badge badge-green" style="font-size:10px;padding:2px 7px;"><span class="badge-dot"></span>Réglé</span>
+                @else
+                    <span class="badge badge-amber" style="font-size:10px;padding:2px 7px;"><span class="badge-dot"></span>Non réglé</span>
+                @endif
+            </div>
+        </div>
+        @empty
+        <div class="empty-state"><i class="fa-regular fa-calendar-xmark"></i><p>Aucune réservation trouvée</p></div>
+        @endforelse
+    </div>
+
+    @if($reservations->hasPages())
+    <div class="pagination-wrap">
+        <span>{{ $reservations->firstItem() }}–{{ $reservations->lastItem() }} sur {{ $reservations->total() }}</span>
+        {{ $reservations->withQueryString()->links() }}
+    </div>
+    @endif
+</div>
+
+@if(request()->hasAny(['search','status','payment_status','date_from','date_to']))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var btn = document.querySelector('.filters-toggle');
+        if (btn && window.innerWidth < 768) toggleFilters(btn);
+    });
+</script>
+@endif
 @endsection

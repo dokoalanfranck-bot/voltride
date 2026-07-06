@@ -8,6 +8,7 @@ use App\Models\Scooter;
 use App\Models\User;
 use Illuminate\View\View;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -18,59 +19,56 @@ class DashboardController extends Controller
 
     public function index(): View
     {
-        $totalScooters = Scooter::count();
-        $activeScooters = Scooter::where('status', 'available')->count();
-        $totalReservations = Reservation::count();
-        $completedReservations = Reservation::where('status', 'completed')->count();
-        $totalUsers = User::where('role', 'client')->count();
-        
-        // Total revenue from completed reservations with completed payments
-        $totalRevenue = Reservation::where('payment_status', 'completed')
-            ->sum('total_price');
+        $now = Carbon::now();
 
-        // Monthly revenue from completed reservations with completed payments
+        $totalScooters      = Scooter::count();
+        $activeScooters     = Scooter::where('status', 'available')->where('is_active', true)->count();
+        $totalReservations  = Reservation::count();
+        $pendingReservations = Reservation::where('status', 'pending')->count();
+        $activeReservations = Reservation::where('status', 'active')->count();
+        $totalUsers         = User::where('role', 'client')->count();
+
+        $totalRevenue   = Reservation::where('payment_status', 'completed')->sum('total_price');
         $monthlyRevenue = Reservation::where('payment_status', 'completed')
-            ->whereBetween('created_at', [
-                Carbon::now()->startOfMonth(),
-                Carbon::now()->endOfMonth()
-            ])
+            ->whereBetween('created_at', [$now->copy()->startOfMonth(), $now->copy()->endOfMonth()])
             ->sum('total_price');
 
-        // Last 30 days reservations
-        $last30Days = Reservation::where('status', 'completed')
-            ->whereBetween('created_at', [
-                Carbon::now()->subDays(30),
-                Carbon::now()
-            ])
-            ->count();
+        // Revenue last 6 months for chart
+        $revenueByMonth = [];
+        $monthLabels    = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = $now->copy()->subMonths($i);
+            $monthLabels[] = $month->translatedFormat('M Y');
+            $revenueByMonth[] = (float) Reservation::where('payment_status', 'completed')
+                ->whereBetween('created_at', [$month->copy()->startOfMonth(), $month->copy()->endOfMonth()])
+                ->sum('total_price');
+        }
 
-        // Top scooters
-        $topScooters = Scooter::withCount('reservations')
-            ->orderBy('reservations_count', 'desc')
+        // Reservations by status for pie chart
+        $statusCounts = Reservation::select('status', DB::raw('count(*) as count'))
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        $topScooters = Scooter::withCount(['reservations' => fn ($q) => $q->where('status', '!=', 'cancelled')])
+            ->orderByDesc('reservations_count')
             ->take(5)
             ->get();
 
-        // Recent reservations
-        $recentReservations = Reservation::with('user')
+        $recentReservations = Reservation::with(['user', 'scooter'])
             ->latest()
-            ->take(10)
+            ->take(8)
             ->get();
 
-        // Occupancy rate
-        $occupancyRate = ($completedReservations / max($totalReservations, 1)) * 100;
-
-        return view('admin.dashboard', [
-            'totalScooters' => $totalScooters,
-            'activeScooters' => $activeScooters,
-            'totalReservations' => $totalReservations,
-            'completedReservations' => $completedReservations,
-            'totalUsers' => $totalUsers,
-            'totalRevenue' => $totalRevenue,
-            'monthlyRevenue' => $monthlyRevenue,
-            'last30Days' => $last30Days,
-            'topScooters' => $topScooters,
-            'recentReservations' => $recentReservations,
-            'occupancyRate' => round($occupancyRate, 2),
-        ]);
+        return view('admin.dashboard', compact(
+            'totalScooters', 'activeScooters',
+            'totalReservations', 'pendingReservations', 'activeReservations',
+            'totalUsers',
+            'totalRevenue', 'monthlyRevenue',
+            'revenueByMonth', 'monthLabels',
+            'statusCounts',
+            'topScooters',
+            'recentReservations'
+        ));
     }
 }

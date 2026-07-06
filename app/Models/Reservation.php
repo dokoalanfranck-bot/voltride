@@ -49,7 +49,7 @@ class Reservation extends Model
         return $this->hasOne(Payment::class);
     }
 
-    public function calculatePrice(): decimal|float
+    public function calculatePrice(): float
     {
         if (!$this->end_time) {
             return 0;

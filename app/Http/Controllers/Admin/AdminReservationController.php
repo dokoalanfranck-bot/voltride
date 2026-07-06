@@ -31,7 +31,7 @@ class AdminReservationController extends Controller
 
     public function index(Request $request): View
     {
-        $query = Reservation::with('user', 'scooter');
+        $query = Reservation::with(['user', 'scooter.images']);
 
         // Filter by status
         if ($request->filled('status')) {
@@ -68,6 +68,7 @@ class AdminReservationController extends Controller
 
     public function show(Reservation $reservation): View
     {
+        $reservation->load(['user', 'scooter.images', 'payment']);
         $payment = $reservation->payment;
 
         return view('admin.reservations.show', compact('reservation', 'payment'));

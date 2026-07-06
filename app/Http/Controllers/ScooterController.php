@@ -24,22 +24,17 @@ class ScooterController extends Controller
             });
         }
 
-        // Filtre prix par heure
-        if ($request->has('price_hour_min') && $request->filled('price_hour_min')) {
-            $query->where('price_hour', '>=', $request->input('price_hour_min'));
+        if ($request->filled('price_min')) {
+            $query->where('price_hour', '>=', $request->input('price_min'));
         }
-        if ($request->has('price_hour_max') && $request->filled('price_hour_max')) {
-            $query->where('price_hour', '<=', $request->input('price_hour_max'));
+        if ($request->filled('price_max')) {
+            $query->where('price_hour', '<=', $request->input('price_max'));
         }
-
-        // Filtre vitesse
-        if ($request->has('min_speed') && $request->filled('min_speed')) {
-            $query->where('max_speed', '>=', $request->input('min_speed'));
+        if ($request->filled('speed_min')) {
+            $query->where('max_speed', '>=', $request->input('speed_min'));
         }
-
-        // Filtre batterie
-        if ($request->has('min_battery') && $request->filled('min_battery')) {
-            $query->where('battery_level', '>=', $request->input('min_battery'));
+        if ($request->filled('battery_min')) {
+            $query->where('battery_level', '>=', $request->input('battery_min'));
         }
 
         // Tri

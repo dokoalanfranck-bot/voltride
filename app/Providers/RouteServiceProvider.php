@@ -28,6 +28,26 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
+        // Broad, low-cost protection applied to every "web" request (mitigates
+        // scripted/flood traffic hitting any page, not just form submissions).
+        RateLimiter::for('web-global', function (Request $request) {
+            return Limit::perMinute(200)->by($request->ip());
+        });
+
+        // Guest reservation creation is the main abuse surface (fake bookings,
+        // fake emails, scooter-blocking spam) so it gets a much tighter limit.
+        RateLimiter::for('reservations', function (Request $request) {
+            return Limit::perMinutes(15, 8)->by($request->ip());
+        });
+
+        RateLimiter::for('register', function (Request $request) {
+            return Limit::perMinute(5)->by($request->ip());
+        });
+
+        RateLimiter::for('password-reset', function (Request $request) {
+            return Limit::perMinute(5)->by($request->ip());
+        });
+
         $this->routes(function () {
             Route::middleware('api')
                 ->prefix('api')

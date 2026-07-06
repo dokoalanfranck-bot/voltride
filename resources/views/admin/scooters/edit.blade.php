@@ -1,185 +1,189 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('title', 'Modifier ' . $scooter->name . ' - VoltRide Admin')
+@section('title', 'Modifier — '.$scooter->name)
+@section('breadcrumb', 'Modifier '.$scooter->name)
 
 @section('content')
-<div class="container" style="padding-top: 40px; padding-bottom: 60px; max-width: 800px;">
-    <!-- Header -->
-    <div style="margin-bottom: 32px;">
-        <a href="{{ route('admin.scooters.index') }}" style="color: var(--gray); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 8px;">← Retour à la liste</a>
-        <h1 style="font-size: 2rem; font-weight: 800; letter-spacing: -1px;">
-            Modifier <span style="color: var(--primary);">{{ $scooter->name }}</span>
-        </h1>
+<div class="page-header">
+    <div class="page-header-left">
+        <div class="page-heading">{{ $scooter->name }}</div>
+        <div class="page-subtitle">Modifiez les informations de cette trottinette</div>
     </div>
+    <div style="display:flex;gap:10px;">
+        <a href="{{ route('admin.scooters.index') }}" class="btn btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Retour
+        </a>
+        <form method="POST" action="{{ route('admin.scooters.destroy', $scooter) }}"
+              onsubmit="return confirm('Supprimer définitivement cette trottinette ?')">
+            @csrf @method('DELETE')
+            <button type="submit" class="btn btn-danger">
+                <i class="fa-solid fa-trash"></i> Supprimer
+            </button>
+        </form>
+    </div>
+</div>
 
-    <!-- Error Messages -->
-    @if ($errors->any())
-        <div class="alert alert-danger" style="margin-bottom: 24px;">
-            <p style="font-weight: 700; margin-bottom: 8px;">Veuillez corriger les erreurs suivantes:</p>
-            @foreach ($errors->all() as $error)
-                <p style="margin: 4px 0;">• {{ $error }}</p>
-            @endforeach
-        </div>
-    @endif
+<form method="POST" action="{{ route('admin.scooters.update', $scooter) }}" enctype="multipart/form-data">
+    @csrf @method('PUT')
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px;align-items:start;">
 
-    <!-- Success Message -->
-    @if(session('success'))
-        <div class="alert alert-success" style="margin-bottom: 24px;">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <!-- Form -->
-    <form action="{{ route('admin.scooters.update', $scooter) }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
-
-        <!-- Current Images -->
-        @if($scooter->images->count() > 0)
-            <div class="card" style="margin-bottom: 24px;">
+        <div style="display:flex;flex-direction:column;gap:20px;">
+            <div class="card">
+                <div class="card-header"><div class="card-title">Informations générales</div></div>
                 <div class="card-body">
-                    <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px;">📷 Images actuelles</h3>
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                        @foreach($scooter->images as $image)
-                            <div style="position: relative;">
-                                <img src="{{ asset('storage/' . $image->image_path) }}" alt="{{ $scooter->name }}" style="width: 100px; height: 100px; border-radius: 8px; object-fit: contain; background: var(--dark-lighter);">
-                                <button type="button" onclick="deleteImage({{ $image->id }})" style="position: absolute; top: -8px; right: -8px; width: 24px; height: 24px; border-radius: 50%; background: #ef4444; color: white; border: none; cursor: pointer; font-size: 0.8rem;">×</button>
-                            </div>
+                    <div class="form-group">
+                        <label class="form-label">Nom *</label>
+                        <input type="text" name="name" class="form-control" value="{{ old('name', $scooter->name) }}" required>
+                        @error('name')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="4">{{ old('description', $scooter->description) }}</textarea>
+                        @error('description')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Emplacement</label>
+                        <input type="text" name="location" class="form-control" value="{{ old('location', $scooter->location) }}">
+                        @error('location')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><div class="card-title">Tarification</div></div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Prix / heure (€) *</label>
+                            <input type="number" name="price_hour" class="form-control" value="{{ old('price_hour', $scooter->price_hour) }}" step="0.01" min="0" required>
+                            @error('price_hour')<div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Prix / minute (€) *</label>
+                            <input type="number" name="price_minute" class="form-control" value="{{ old('price_minute', $scooter->price_minute) }}" step="0.001" min="0" required>
+                            @error('price_minute')<div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Prix journée (€)</label>
+                        <input type="number" name="price_day" class="form-control" value="{{ old('price_day', $scooter->price_day) }}" step="0.01" min="0">
+                        @error('price_day')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
+                </div>
+            </div>
+
+            {{-- Existing images --}}
+            @if($scooter->images->count())
+            <div class="card">
+                <div class="card-header"><div class="card-title">Photos actuelles</div></div>
+                <div class="card-body">
+                    <div style="display:flex;flex-wrap:wrap;gap:10px;">
+                        @foreach($scooter->images as $img)
+                        <div style="position:relative;">
+                            <img src="{{ route('storage.image', $img->image_path) }}"
+                                 style="width:90px;height:90px;object-fit:cover;border-radius:8px;border:1px solid var(--border);">
+                        </div>
                         @endforeach
                     </div>
                 </div>
             </div>
-        @endif
+            @endif
 
-        <!-- Basic Info -->
-        <div class="card" style="margin-bottom: 24px;">
-            <div class="card-body">
-                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;">📝 Informations de base</h3>
-
-                <div class="form-group" style="margin-bottom: 20px;">
-                    <label class="form-label">Nom de la trottinette *</label>
-                    <input type="text" name="name" value="{{ old('name', $scooter->name) }}" required class="form-input" placeholder="Ex: Volt E-Pro 500">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <textarea name="description" rows="4" class="form-input" placeholder="Description détaillée de la trottinette...">{{ old('description', $scooter->description) }}</textarea>
+            <div class="card">
+                <div class="card-header"><div class="card-title">Ajouter des photos</div></div>
+                <div class="card-body">
+                    <input type="file" name="images[]" class="form-control" multiple accept="image/*" id="imageInput" style="padding:8px;">
+                    <div class="form-hint">Les nouvelles images seront ajoutées aux existantes</div>
+                    <div id="imagePreview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Specs -->
-        <div class="card" style="margin-bottom: 24px;">
-            <div class="card-body">
-                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;">Caractéristiques</h3>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div style="display:flex;flex-direction:column;gap:20px;">
+            <div class="card">
+                <div class="card-header"><div class="card-title">Statut & Disponibilité</div></div>
+                <div class="card-body">
                     <div class="form-group">
-                        <label class="form-label">Vitesse max (km/h) *</label>
-                        <input type="number" name="max_speed" value="{{ old('max_speed', $scooter->max_speed) }}" required class="form-input" min="0" max="100">
+                        <label class="form-label">Statut *</label>
+                        <select name="status" class="form-control">
+                            <option value="available"   {{ old('status',$scooter->status)==='available'   ? 'selected':'' }}>Disponible</option>
+                            <option value="rented"      {{ old('status',$scooter->status)==='rented'      ? 'selected':'' }}>En location</option>
+                            <option value="maintenance" {{ old('status',$scooter->status)==='maintenance' ? 'selected':'' }}>Maintenance</option>
+                        </select>
+                        @error('status')<div class="form-error">{{ $message }}</div>@enderror
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Niveau de batterie (%)</label>
-                        <input type="number" name="battery_level" value="{{ old('battery_level', $scooter->battery_level) }}" class="form-input" min="0" max="100">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pricing -->
-        <div class="card" style="margin-bottom: 24px;">
-            <div class="card-body">
-                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;">Tarification</h3>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                    <div class="form-group">
-                        <label class="form-label">Prix par heure ($) *</label>
-                        <input type="number" name="price_hour" value="{{ old('price_hour', $scooter->price_hour) }}" required class="form-input" min="0" step="0.01">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Prix par jour ($)</label>
-                        <input type="number" name="price_day" value="{{ old('price_day', $scooter->price_day) }}" class="form-input" min="0" step="0.01">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+                            <input type="hidden" name="is_active" value="0">
+                            <input type="checkbox" name="is_active" value="1"
+                                   {{ old('is_active', $scooter->is_active) ? 'checked' : '' }}
+                                   style="width:16px;height:16px;accent-color:var(--primary);cursor:pointer;">
+                            <span style="font-size:13px;font-weight:500;color:var(--txt);">Trottinette active</span>
+                        </label>
+                        <div class="form-hint">Une trottinette inactive n'apparaît pas sur le site</div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Location & Status -->
-        <div class="card" style="margin-bottom: 24px;">
-            <div class="card-body">
-                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;">Localisation & Statut</h3>
-
-                <div class="form-group" style="margin-bottom: 20px;">
-                    <label class="form-label">Localisation</label>
-                    <input type="text" name="location" value="{{ old('location', $scooter->location) }}" class="form-input" placeholder="Ex: Centre-ville, Station A">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Statut *</label>
-                    <select name="status" required class="form-input">
-                        <option value="available" {{ old('status', $scooter->status) == 'available' ? 'selected' : '' }}>Disponible</option>
-                        <option value="rented" {{ old('status', $scooter->status) == 'rented' ? 'selected' : '' }}>En location</option>
-                        <option value="maintenance" {{ old('status', $scooter->status) == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- New Images -->
-        <div class="card" style="margin-bottom: 24px;">
-            <div class="card-body">
-                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 24px;">📷 Ajouter des images</h3>
-
-                <div class="form-group">
-                    <label class="form-label">Télécharger de nouvelles images</label>
-                    <input type="file" name="images[]" multiple accept="image/*" class="form-input" style="padding: 12px;">
-                    <p style="color: var(--gray); font-size: 0.85rem; margin-top: 8px;">Formats acceptés: JPG, PNG, GIF. Max 5MB par image.</p>
+            <div class="card">
+                <div class="card-header"><div class="card-title">Caractéristiques</div></div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label">Vitesse max (km/h)</label>
+                        <input type="number" name="max_speed" class="form-control" value="{{ old('max_speed', $scooter->max_speed) }}" step="0.1" min="0">
+                        @error('max_speed')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            Batterie :
+                            <span id="battLabel" style="color:#00FF6A;font-weight:600;">{{ old('battery_level', $scooter->battery_level ?? 100) }}%</span>
+                        </label>
+                        <input type="range" name="battery_level" id="battRange" class="form-control"
+                               value="{{ old('battery_level', $scooter->battery_level ?? 100) }}"
+                               min="0" max="100" step="1"
+                               style="padding:4px 0;cursor:pointer;accent-color:#00FF6A;">
+                        @error('battery_level')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Code QR</label>
+                        <input type="text" name="qr_code" class="form-control" value="{{ old('qr_code', $scooter->qr_code) }}">
+                        @error('qr_code')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Submit -->
-        <div style="display: flex; gap: 12px;">
-            <button type="submit" class="btn btn-primary btn-lg" style="flex: 1; justify-content: center;">
-                Sauvegarder les modifications
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;">
+                <i class="fa-solid fa-floppy-disk"></i> Enregistrer les modifications
             </button>
-            <a href="{{ route('admin.scooters.index') }}" class="btn btn-secondary btn-lg">
-                Annuler
-            </a>
         </div>
-    </form>
-</div>
 
+    </div>
+</form>
+@endsection
+
+@section('scripts')
 <script>
-    function deleteImage(imageId) {
-        if (confirm('Êtes-vous sûr de vouloir supprimer cette image ?')) {
-            fetch('/admin/scooter-images/' + imageId, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert('Erreur lors de la suppression de l\'image.');
-                }
-            })
-            .catch(() => {
-                alert('Erreur lors de la suppression de l\'image.');
-            });
-        }
-    }
-</script>
+const battRange = document.getElementById('battRange');
+const battLabel = document.getElementById('battLabel');
+battRange.addEventListener('input', () => {
+    battLabel.textContent = battRange.value + '%';
+    const v = parseInt(battRange.value);
+    battLabel.style.color = v > 50 ? '#00FF6A' : v > 20 ? '#ffaa00' : '#ff4d4d';
+});
 
-<style>
-    @media (max-width: 600px) {
-        .card-body > div[style*="grid-template-columns: 1fr 1fr"] {
-            grid-template-columns: 1fr !important;
-        }
-    }
-</style>
+document.getElementById('imageInput').addEventListener('change', function() {
+    const preview = document.getElementById('imagePreview');
+    preview.innerHTML = '';
+    [...this.files].forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.cssText = 'width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border);';
+            preview.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    });
+});
+</script>
 @endsection

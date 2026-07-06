@@ -1,181 +1,241 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('title', 'Admin Dashboard - VoltRide')
+@section('title', 'Tableau de bord')
+@section('breadcrumb', 'Tableau de bord')
+
+@section('head')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+@endsection
 
 @section('content')
-<div class="container" style="padding-top: 40px; padding-bottom: 60px;">
-    <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 32px; letter-spacing: -1px;">
-        📊 Tableau de bord <span style="color: var(--primary);">Admin</span>
-    </h1>
+<div class="page-header">
+    <div>
+        <div class="page-heading">Tableau de <span class="accent">bord</span></div>
+        <div class="page-subtitle">Vue d'ensemble — {{ now()->format('d/m/Y') }}</div>
+    </div>
+    <a href="{{ route('admin.scooters.create') }}" class="btn btn-primary">
+        <i class="fa-solid fa-plus"></i> Ajouter une trottinette
+    </a>
+</div>
 
-    <!-- Key Metrics -->
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px;">
-        <div class="card" style="border-left: 4px solid var(--primary);">
-            <div class="card-body">
-                <h3 style="color: var(--gray); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Total Trottinettes</h3>
-                <p style="font-size: 2.5rem; font-weight: 800; color: var(--primary); margin-bottom: 8px;">{{ $totalScooters }}</p>
-                <p style="color: var(--primary); font-size: 0.9rem; font-weight: 600;">{{ $activeScooters }} disponibles</p>
+{{-- KPI Cards --}}
+<div class="stat-grid">
+    <div class="stat-card c-green">
+        <div class="stat-icon"><i class="fa-solid fa-euro-sign"></i></div>
+        <div class="stat-label">Revenus totaux</div>
+        <div class="stat-value">{{ number_format($totalRevenue, 0, ',', ' ') }}€</div>
+        <div class="stat-meta">Ce mois : {{ number_format($monthlyRevenue, 0, ',', ' ') }}€</div>
+    </div>
+    <div class="stat-card c-blue">
+        <div class="stat-icon"><i class="fa-solid fa-calendar-check"></i></div>
+        <div class="stat-label">Réservations</div>
+        <div class="stat-value">{{ $totalReservations }}</div>
+        <div class="stat-meta">{{ $activeReservations }} en cours · {{ $pendingReservations }} en attente</div>
+    </div>
+    <div class="stat-card c-amber">
+        <div class="stat-icon"><i class="fa-solid fa-motorcycle"></i></div>
+        <div class="stat-label">Trottinettes</div>
+        <div class="stat-value">{{ $totalScooters }}</div>
+        <div class="stat-meta">{{ $activeScooters }} disponibles</div>
+    </div>
+    <div class="stat-card c-red">
+        <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+        <div class="stat-label">Clients</div>
+        <div class="stat-value">{{ $totalUsers }}</div>
+        <div class="stat-meta">Comptes enregistrés</div>
+    </div>
+</div>
+
+{{-- Charts --}}
+<div class="dash-charts-grid" style="display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:24px;">
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Revenus mensuels</div>
+                <div class="card-subtitle">6 derniers mois</div>
             </div>
         </div>
-
-        <div class="card" style="border-left: 4px solid #22c55e;">
-            <div class="card-body">
-                <h3 style="color: var(--gray); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Total Réservations</h3>
-                <p style="font-size: 2.5rem; font-weight: 800; color: #22c55e; margin-bottom: 8px;">{{ $totalReservations }}</p>
-                <p style="color: #22c55e; font-size: 0.9rem; font-weight: 600;">{{ $completedReservations }} complétées</p>
-            </div>
-        </div>
-
-        <div class="card" style="border-left: 4px solid #f59e0b;">
-            <div class="card-body">
-                <h3 style="color: var(--gray); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Revenu Total</h3>
-                <p style="font-size: 2.5rem; font-weight: 800; color: #f59e0b; margin-bottom: 8px;">{{ number_format($totalRevenue, 0) }} $</p>
-                <p style="color: #f59e0b; font-size: 0.9rem; font-weight: 600;">📈 {{ number_format($monthlyRevenue, 0) }} $ ce mois</p>
-            </div>
-        </div>
-
-        <div class="card" style="border-left: 4px solid #3b82f6;">
-            <div class="card-body">
-                <h3 style="color: var(--gray); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">👥 Utilisateurs</h3>
-                <p style="font-size: 2.5rem; font-weight: 800; color: #3b82f6; margin-bottom: 8px;">{{ $totalUsers }}</p>
-                <p style="color: #3b82f6; font-size: 0.9rem; font-weight: 600;">📊 {{ $occupancyRate }}% d'occupation</p>
-            </div>
+        <div class="card-body">
+            <canvas id="revenueChart" height="110"></canvas>
         </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px;">
-        <a href="{{ route('admin.scooters.create') }}" class="btn btn-primary btn-lg" style="justify-content: center; padding: 24px;">
-            <span style="font-size: 1.5rem; margin-right: 12px;"><i class="fa-solid fa-plus-circle"></i></span>
-            <div style="text-align: left;">
-                <div style="font-weight: 700;">Nouvelle Trottinette</div>
-                <div style="font-size: 0.85rem; opacity: 0.8;">Ajouter au parc</div>
-            </div>
-        </a>
-        <a href="{{ route('admin.scooters.index') }}" class="btn btn-secondary btn-lg" style="justify-content: center; padding: 24px;">
-            <span style="font-size: 1.5rem; margin-right: 12px;"><i class="fa-solid fa-motorcycle"></i></span>
-            <div style="text-align: left;">
-                <div style="font-weight: 700;">Gérer les Trottinettes</div>
-                <div style="font-size: 0.85rem; opacity: 0.8;">{{ $totalScooters }} au total</div>
-            </div>
-        </a>
-        <a href="{{ route('admin.reservations.index') }}" class="btn btn-secondary btn-lg" style="justify-content: center; padding: 24px;">
-            <span style="font-size: 1.5rem; margin-right: 12px;"><i class="fa-solid fa-calendar-check"></i></span>
-            <div style="text-align: left;">
-                <div style="font-weight: 700;">Gérer les Réservations</div>
-                <div style="font-size: 0.85rem; opacity: 0.8;">{{ $pendingReservations ?? 0 }} en attente</div>
-            </div>
-        </a>
-    </div>
-
-    <!-- Recent Reservations & Scooters -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-        <!-- Recent Reservations -->
-        <div class="card">
-            <div class="card-body">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="font-size: 1.1rem; font-weight: 700;">Réservations récentes</h3>
-                    <a href="{{ route('admin.reservations.index') }}" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">Voir tout →</a>
-                </div>
-                
-                @if(isset($recentReservations) && $recentReservations->count() > 0)
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Client</th>
-                                    <th>Statut</th>
-                                    <th>Prix</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($recentReservations->take(5) as $reservation)
-                                    <tr>
-                                        <td>#{{ $reservation->id }}</td>
-                                        <td>{{ $reservation->guest_name ?? $reservation->user?->name ?? 'N/A' }}</td>
-                                        <td>
-                                            @if($reservation->status === 'pending')
-                                                <span class="badge badge-warning">En attente</span>
-                                            @elseif($reservation->status === 'active')
-                                                <span class="badge badge-info">En cours</span>
-                                            @elseif($reservation->status === 'completed')
-                                                <span class="badge badge-success">Terminée</span>
-                                            @else
-                                                <span class="badge badge-danger">Annulée</span>
-                                            @endif
-                                        </td>
-                                        <td class="price">{{ number_format($reservation->total_price, 2) }} $</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                @else
-                    <p style="color: var(--gray); text-align: center; padding: 20px;">Aucune réservation récente</p>
-                @endif
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Statut des réservations</div>
+                <div class="card-subtitle">Répartition globale</div>
             </div>
         </div>
-
-        <!-- Recent Scooters -->
-        <div class="card">
-            <div class="card-body">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="font-size: 1.1rem; font-weight: 700;">Trottinettes</h3>
-                    <a href="{{ route('admin.scooters.index') }}" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">Voir tout →</a>
-                </div>
-                
-                @if(isset($recentScooters) && $recentScooters->count() > 0)
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Nom</th>
-                                    <th>Statut</th>
-                                    <th>Prix/h</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($recentScooters->take(5) as $scooter)
-                                    <tr>
-                                        <td style="font-weight: 600;">{{ $scooter->name }}</td>
-                                        <td>
-                                            @if($scooter->status === 'available')
-                                                <span class="badge badge-success">Disponible</span>
-                                            @else
-                                                <span class="badge badge-warning">En location</span>
-                                            @endif
-                                        </td>
-                                        <td class="price">{{ number_format($scooter->price_hour, 2) }} $</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+        <div class="card-body" style="display:flex;flex-direction:column;align-items:center;gap:20px;">
+            <canvas id="statusChart" width="150" height="150" style="max-width:150px;"></canvas>
+            <div style="width:100%;display:flex;flex-direction:column;gap:8px;">
+                @php
+                    $sLabels = [
+                        'pending'   => ['En attente', '#ffaa00'],
+                        'active'    => ['En cours',   '#00aaff'],
+                        'completed' => ['Terminées',  '#00FF6A'],
+                        'cancelled' => ['Annulées',   '#555555'],
+                    ];
+                @endphp
+                @foreach($sLabels as $key => [$label, $color])
+                    @if(($statusCounts[$key] ?? 0) > 0)
+                    <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;">
+                        <div style="display:flex;align-items:center;gap:7px;">
+                            <span style="width:8px;height:8px;border-radius:50%;background:{{ $color }};flex-shrink:0;display:inline-block;"></span>
+                            <span style="color:var(--txt2);">{{ $label }}</span>
+                        </div>
+                        <span style="font-weight:700;color:var(--txt);">{{ $statusCounts[$key] }}</span>
                     </div>
-                @else
-                    <p style="color: var(--gray); text-align: center; padding: 20px;">Aucune trottinette</p>
-                @endif
+                    @endif
+                @endforeach
             </div>
         </div>
     </div>
 </div>
 
+{{-- Tables --}}
+<div class="dash-tables-grid" style="display:grid;grid-template-columns:3fr 2fr;gap:20px;">
+
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Réservations récentes</div>
+            <a href="{{ route('admin.reservations.index') }}" class="btn btn-secondary btn-sm">Voir tout</a>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Client</th>
+                        <th>Trottinette</th>
+                        <th>Statut</th>
+                        <th>Montant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($recentReservations as $r)
+                    <tr style="cursor:pointer;" onclick="location.href='{{ route('admin.reservations.show', $r) }}'">
+                        <td><span style="font-family:monospace;font-size:11px;color:var(--txt3);">#{{ $r->id }}</span></td>
+                        <td class="td-main">{{ $r->user?->name ?? $r->guest_name ?? 'Invité' }}</td>
+                        <td>{{ $r->scooter?->name ?? '—' }}</td>
+                        <td>
+                            @php
+                                $b = match($r->status) {
+                                    'pending'   => 'badge-amber',
+                                    'active'    => 'badge-blue',
+                                    'completed' => 'badge-green',
+                                    'cancelled' => 'badge-gray',
+                                    default     => 'badge-gray',
+                                };
+                                $l = match($r->status) {
+                                    'pending'   => 'En attente',
+                                    'active'    => 'En cours',
+                                    'completed' => 'Terminée',
+                                    'cancelled' => 'Annulée',
+                                    default     => $r->status,
+                                };
+                            @endphp
+                            <span class="badge {{ $b }}"><span class="badge-dot"></span>{{ $l }}</span>
+                        </td>
+                        <td style="font-weight:600;">{{ $r->total_price ? number_format($r->total_price, 2, ',', ' ').'€' : '—' }}</td>
+                    </tr>
+                    @empty
+                    <tr><td colspan="5"><div class="empty-state" style="padding:30px 20px;"><i class="fa-regular fa-calendar-xmark"></i><p>Aucune réservation</p></div></td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Top trottinettes</div>
+            <a href="{{ route('admin.scooters.index') }}" class="btn btn-secondary btn-sm">Gérer</a>
+        </div>
+        <div style="padding:0;">
+            @forelse($topScooters as $i => $s)
+            <div style="display:flex;align-items:center;gap:12px;padding:14px 20px;{{ !$loop->last ? 'border-bottom:1px solid var(--border);' : '' }}">
+                <div style="width:26px;height:26px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:{{ $i===0?'#f59e0b':($i===1?'#94a3b8':($i===2?'#b45309':'var(--txt3)')) }};flex-shrink:0;">{{ $i+1 }}</div>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $s->name }}</div>
+                    <div style="font-size:11px;color:var(--txt3);">{{ $s->location ?? 'Non défini' }}</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-weight:700;font-size:16px;color:var(--primary);">{{ $s->reservations_count }}</div>
+                    <div style="font-size:10px;color:var(--txt3);">réserv.</div>
+                </div>
+            </div>
+            @empty
+            <div class="empty-state"><i class="fa-solid fa-motorcycle"></i><p>Aucune donnée</p></div>
+            @endforelse
+        </div>
+    </div>
+
+</div>
+@endsection
+
+@section('scripts')
 <style>
-    @media (max-width: 1024px) {
-        .container > div:nth-child(2) {
-            grid-template-columns: repeat(2, 1fr) !important;
-        }
-        .container > div:nth-child(3) {
-            grid-template-columns: 1fr !important;
-        }
-        .container > div:last-child {
-            grid-template-columns: 1fr !important;
-        }
-    }
-    @media (max-width: 600px) {
-        .container > div:nth-child(2) {
-            grid-template-columns: 1fr !important;
-        }
-    }
+@media (max-width: 767px) {
+    .dash-charts-grid { grid-template-columns: 1fr !important; }
+    .dash-tables-grid  { grid-template-columns: 1fr !important; }
+    /* Compact donut on mobile */
+    #statusChart { max-width: 120px !important; }
+}
 </style>
+<script>
+Chart.defaults.color = '#666666';
+
+new Chart(document.getElementById('revenueChart'), {
+    type: 'bar',
+    data: {
+        labels: @json($monthLabels),
+        datasets: [{
+            data: @json($revenueByMonth),
+            backgroundColor: 'rgba(0, 255, 106, 0.12)',
+            borderColor: '#00FF6A',
+            borderWidth: 2,
+            borderRadius: 6,
+            borderSkipped: false,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ' ' + ctx.raw.toFixed(2) + ' €' } }
+        },
+        scales: {
+            x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#666', font: { size: 11 } } },
+            y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#666', font: { size: 11 }, callback: v => v + '€' } }
+        }
+    }
+});
+
+new Chart(document.getElementById('statusChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['En attente','En cours','Terminées','Annulées'],
+        datasets: [{
+            data: [
+                {{ $statusCounts['pending']   ?? 0 }},
+                {{ $statusCounts['active']    ?? 0 }},
+                {{ $statusCounts['completed'] ?? 0 }},
+                {{ $statusCounts['cancelled'] ?? 0 }}
+            ],
+            backgroundColor: ['#ffaa00','#00aaff','#00FF6A','#333333'],
+            borderWidth: 0,
+            hoverOffset: 6,
+        }]
+    },
+    options: {
+        cutout: '72%',
+        plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ' ' + ctx.label + ': ' + ctx.raw } }
+        }
+    }
+});
+</script>
 @endsection
